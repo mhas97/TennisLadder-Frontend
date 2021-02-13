@@ -13,7 +13,5 @@ public class LadderActivity extends AppCompatActivity {
     }
 
     public void getLadderData() {
-        NetworkRequest req = new NetworkRequest(this, API.URL_GET_LADDER_DATA, null, API.REQ_TYPE_GET);
-        req.execute();
     }
 }
