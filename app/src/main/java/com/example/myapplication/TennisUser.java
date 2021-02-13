@@ -10,8 +10,13 @@ public class TennisUser {
     private int clubid;
     private int elo;
 
-    public TennisUser(int playerid, String email, String password, String contactno, String fname, String lname, int clubid, int elo)
-    {
+    public TennisUser(String fname, String lname, int elo) {
+        this.fname = fname;
+        this.lname = lname;
+        this.elo = elo;
+    }
+
+    public TennisUser(int playerid, String email, String password, String contactno, String fname, String lname, int clubid, int elo) {
         this.playerid = playerid;
         this.email = email;
         this.password = password;

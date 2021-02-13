@@ -79,7 +79,7 @@ public class SignupActivity extends AppCompatActivity {
             try
             {
                 JSONObject object = new JSONObject(s);
-                Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_LONG).show();
             } catch (JSONException e)
             {
                 e.printStackTrace();
