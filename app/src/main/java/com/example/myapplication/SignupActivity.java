@@ -13,6 +13,8 @@ public class SignupActivity extends AppCompatActivity {
     Button buttonSignup;
     boolean isUpdating = false;
 
+    this is a test
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
