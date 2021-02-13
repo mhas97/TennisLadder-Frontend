@@ -14,6 +14,7 @@ public class NetworkRequest extends AsyncTask<Void, Void, String> {
     private Context context;
 
     String HELLOOOOOO;
+    wat2
 
     NetworkRequest(Context context, String url, HashMap<String, String> params, int requestCode)
     {
