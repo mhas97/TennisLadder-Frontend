@@ -1,15 +1,18 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class LadderActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +56,16 @@ public class LadderActivity extends AppCompatActivity {
                     TennisUser t = new TennisUser(fname, lname, elo);
                     players.add(t);
                 }
-                Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_LONG).show();
+                populateLadder(players);
             } catch (JSONException e)
             {
                 e.printStackTrace();
             }
+        }
+
+        private void populateLadder(ArrayList<TennisUser> p) {
+            recyclerView = findViewById(R.id.ladder_recyclerview);
+            LadderAdapter l = new LadderAdapter(getApplicationContext(), p);
         }
 
         @Override
