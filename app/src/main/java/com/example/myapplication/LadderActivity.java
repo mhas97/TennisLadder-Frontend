@@ -1,23 +1,26 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class LadderActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ladder);
+
         getLadderData();
     }
 
@@ -53,19 +56,18 @@ public class LadderActivity extends AppCompatActivity {
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
                     int elo = Integer.parseInt(obj.getString("elo"));
-                    TennisUser t = new TennisUser(fname, lname, elo);
-                    players.add(t);
+                    TennisUser player = new TennisUser(fname, lname, elo);
+                    players.add(player);
                 }
-                populateLadder(players);
+                Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
+                recyclerView = findViewById(R.id.ladder_recyclerview);
+                LadderAdapter ladderAdapter = new LadderAdapter(getApplicationContext(), players);
+                recyclerView.setAdapter(ladderAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             } catch (JSONException e)
             {
                 e.printStackTrace();
             }
-        }
-
-        private void populateLadder(ArrayList<TennisUser> p) {
-            recyclerView = findViewById(R.id.ladder_recyclerview);
-            LadderAdapter l = new LadderAdapter(getApplicationContext(), p);
         }
 
         @Override
