@@ -11,8 +11,6 @@ import java.util.ArrayList;
 
 public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderViewHolder> {
 
-    int rankCount = 1;
-
     ArrayList<TennisUser> p;
     Context context;
 
@@ -31,11 +29,9 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
 
     @Override
     public void onBindViewHolder(@NonNull LadderViewHolder holder, int position) {
-        holder.rank.setText(String.valueOf(rankCount));
+        holder.rank.setText(String.valueOf(position + 1));
         holder.fname.setText(p.get(position).getFname());
         holder.lname.setText(p.get(position).getLname());
-        holder.elo.setText(String.valueOf((p.get(position).getElo())));
-        ++rankCount;
     }
 
     @Override
@@ -45,14 +41,13 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
 
     public class LadderViewHolder extends RecyclerView.ViewHolder {
 
-        TextView rank, fname, lname, elo;
+        TextView rank, fname, lname;
 
         public LadderViewHolder(@NonNull View itemView) {
             super(itemView);
             rank = itemView.findViewById(R.id.rank_text);
             fname = itemView.findViewById(R.id.fname_text);
             lname = itemView.findViewById(R.id.lname_text);
-            elo = itemView.findViewById(R.id.elo_text);
         }
     }
 }

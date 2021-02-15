@@ -25,19 +25,13 @@ public class LadderActivity extends AppCompatActivity {
     }
 
     public void getLadderData() {
-        LadderRequest req = new LadderRequest(API.URL_GET_LADDER_DATA, API.REQ_TYPE_GET);
+        LadderRequest req = new LadderRequest();
         req.execute();
     }
 
     private class LadderRequest extends AsyncTask<Void, Void, String> {
-        String url;
-        int requestCode;
 
-        LadderRequest(String url, int requestCode)
-        {
-            this.url = url;
-            this.requestCode = requestCode;
-        }
+        LadderRequest() { }
 
         @Override
         protected void onPreExecute() { }
@@ -60,6 +54,10 @@ public class LadderActivity extends AppCompatActivity {
                     players.add(player);
                 }
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
+                for (int i = 0; i < arr.length(); ++i)
+                {
+
+                }
                 recyclerView = findViewById(R.id.ladder_recyclerview);
                 LadderAdapter ladderAdapter = new LadderAdapter(getApplicationContext(), players);
                 recyclerView.setAdapter(ladderAdapter);
@@ -75,15 +73,7 @@ public class LadderActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids)
         {
             RequestHandler rqh = new RequestHandler();
-            if (requestCode == API.REQ_TYPE_POST)
-            {
-                return rqh.sendPostRequest(url, null);
-            }
-            if (requestCode == API.REQ_TYPE_GET)
-            {
-                return rqh.sendGetRequest(url);
-            }
-            return null;
+            return rqh.sendGetRequest(API.URL_GET_LADDER_DATA);
         }
     }
 }
