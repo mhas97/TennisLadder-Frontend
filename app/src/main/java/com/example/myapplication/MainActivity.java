@@ -15,7 +15,6 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
     Button buttonLogin;
-    boolean isUpdating = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +23,10 @@ public class MainActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.email_input_login);
         editTextPassword = findViewById(R.id.password_input_login);
-        buttonLogin = findViewById(R.id.login_button);
+        buttonLogin = findViewById(R.id.button_login);
 
         buttonLogin.setOnClickListener(view -> {
-            if (isUpdating) {
-            }
-            else {
-                login();
-            }
+            login();
         });
     }
 

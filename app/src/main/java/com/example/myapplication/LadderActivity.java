@@ -52,7 +52,6 @@ public class LadderActivity extends AppCompatActivity {
                     String lname = obj.getString("lname");
                     int elo = Integer.parseInt(obj.getString("elo"));
                     int hotstreak = Integer.parseInt(obj.getString("hotstreak"));
-                    // Add to player array
                     TennisUser player = new TennisUser(fname, lname, elo, hotstreak);
                     players.add(player);
                 }
