@@ -54,16 +54,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/fname_text" />
 
             <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/img_hotstreak"
+                android:layout_width="20dp"
+                android:layout_height="22dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="2dp"
-                android:background="@drawable/hot_streak"
+                android:layout_marginBottom="2dp"
+                app:layout_constraintBottom_toTopOf="@+id/lname_text"
                 app:layout_constraintStart_toEndOf="@+id/fname_text"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/hot_streak" />
+                tools:srcCompat="@tools:sample/avatars" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

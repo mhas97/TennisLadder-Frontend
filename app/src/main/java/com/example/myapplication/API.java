@@ -11,7 +11,4 @@ public class API {
     public static final String URL_UPDATE_PLAYER = ROOT_URL + "update_player";
     public static final String URL_DELETE_PLAYER = ROOT_URL + "delete_player&id=";
     public static final String URL_GET_CLUBS = ROOT_URL + "get_clubs";
-
-    public static final int REQ_TYPE_GET = 26997;
-    public static final int REQ_TYPE_POST = 15937;
 }

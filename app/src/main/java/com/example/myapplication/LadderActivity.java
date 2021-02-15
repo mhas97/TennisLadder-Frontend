@@ -44,20 +44,19 @@ public class LadderActivity extends AppCompatActivity {
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("players");
                 ArrayList<TennisUser> players = new ArrayList<TennisUser>();
+                // Parse player data
                 for (int i = 0; i < arr.length(); ++i)
                 {
                     JSONObject obj = arr.getJSONObject(i);
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
                     int elo = Integer.parseInt(obj.getString("elo"));
-                    TennisUser player = new TennisUser(fname, lname, elo);
+                    int hotstreak = Integer.parseInt(obj.getString("hotstreak"));
+                    // Add to player array
+                    TennisUser player = new TennisUser(fname, lname, elo, hotstreak);
                     players.add(player);
                 }
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
-                for (int i = 0; i < arr.length(); ++i)
-                {
-
-                }
                 recyclerView = findViewById(R.id.ladder_recyclerview);
                 LadderAdapter ladderAdapter = new LadderAdapter(getApplicationContext(), players);
                 recyclerView.setAdapter(ladderAdapter);

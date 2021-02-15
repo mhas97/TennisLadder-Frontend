@@ -9,11 +9,13 @@ public class TennisUser {
     private String lname;
     private int clubid;
     private int elo;
+    private int hotstreak;
 
-    public TennisUser(String fname, String lname, int elo) {
+    public TennisUser(String fname, String lname, int elo, int hotstreak) {
         this.fname = fname;
         this.lname = lname;
         this.elo = elo;
+        this.hotstreak = hotstreak;
     }
 
     public TennisUser(int playerid, String email, String password, String contactno, String fname, String lname, int clubid, int elo) {
@@ -58,4 +60,6 @@ public class TennisUser {
     public int getElo() {
         return elo;
     }
+
+    public int getHotstreak() { return hotstreak; }
 }
