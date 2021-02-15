@@ -43,20 +43,16 @@ public class MainActivity extends AppCompatActivity {
         params.put("email", email);
         params.put("password", password);
 
-        LoginRequest req = new LoginRequest(API.URL_LOGIN, params, API.REQ_TYPE_POST);
+        LoginRequest req = new LoginRequest(params);
         req.execute();
     }
 
     private class LoginRequest extends AsyncTask<Void, Void, String> {
-        String url;
         HashMap<String, String> params;
-        int requestCode;
 
-        LoginRequest(String url, HashMap<String, String> params, int requestCode)
+        LoginRequest(HashMap<String, String> params)
         {
-            this.url = url;
             this.params = params;
-            this.requestCode = requestCode;
         }
 
         @Override
@@ -79,15 +75,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids)
         {
             RequestHandler rqh = new RequestHandler();
-            if (requestCode == API.REQ_TYPE_POST)
-            {
-                return rqh.sendPostRequest(url, params);
-            }
-            if (requestCode == API.REQ_TYPE_GET)
-            {
-                return rqh.sendGetRequest(url);
-            }
-            return null;
+            return rqh.sendPostRequest(API.URL_LOGIN, params);
         }
     }
 }
