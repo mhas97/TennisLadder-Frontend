@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.AsyncTask;
@@ -10,7 +11,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class LadderActivity extends AppCompatActivity {
 
@@ -64,6 +64,7 @@ public class LadderActivity extends AppCompatActivity {
                 LadderAdapter ladderAdapter = new LadderAdapter(getApplicationContext(), players);
                 recyclerView.setAdapter(ladderAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
             } catch (JSONException e)
             {
                 e.printStackTrace();

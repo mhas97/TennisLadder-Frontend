@@ -10,6 +10,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SignupActivity extends AppCompatActivity {
@@ -17,6 +19,7 @@ public class SignupActivity extends AppCompatActivity {
     Spinner spinnerClub;
     Button buttonSignup;
     boolean isUpdating = false;
+    ArrayList<String> clubs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +33,33 @@ public class SignupActivity extends AppCompatActivity {
         spinnerClub = findViewById(R.id.spinner_club_signup);
         buttonSignup = findViewById(R.id.signup_button);
 
+        getClubList();
+
         buttonSignup.setOnClickListener(view -> {
             if (isUpdating) {
             } else {
                 createUser();
             }
         });
+    }
+
+    private void getClubList() {
+        clubRequest clubRequest = new clubRequest();
+        clubRequest.execute();
+    }
+
+    private class clubRequest extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler rqh = new RequestHandler();
+            return rqh.sendGetRequest(API.URL_GET_CLUBS);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+        }
     }
 
     private void createUser() {
@@ -54,20 +78,16 @@ public class SignupActivity extends AppCompatActivity {
         params.put("lname", lname);
         params.put("clubname", clubname);
 
-        SignupRequest req = new SignupRequest( API.URL_CREATE_PLAYER, params, API.REQ_TYPE_POST);
-        req.execute();
+        SignupRequest signupRequest = new SignupRequest(params);
+        signupRequest.execute();
     }
 
     private class SignupRequest extends AsyncTask<Void, Void, String> {
-        String url;
         HashMap<String, String> params;
-        int requestCode;
 
-        SignupRequest(String url, HashMap<String, String> params, int requestCode)
+        SignupRequest(HashMap<String, String> params)
         {
-            this.url = url;
             this.params = params;
-            this.requestCode = requestCode;
         }
 
         @Override
@@ -90,15 +110,7 @@ public class SignupActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids)
         {
             RequestHandler rqh = new RequestHandler();
-            if (requestCode == API.REQ_TYPE_POST)
-            {
-                return rqh.sendPostRequest(url, params);
-            }
-            if (requestCode == API.REQ_TYPE_GET)
-            {
-                return rqh.sendGetRequest(url);
-            }
-            return null;
+            return rqh.sendPostRequest(API.URL_CREATE_PLAYER, params);
         }
     }
 }
