@@ -44,7 +44,6 @@ public class LadderActivity extends AppCompatActivity {
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("players");
                 ArrayList<TennisUser> players = new ArrayList<TennisUser>();
-                // Parse player data
                 for (int i = 0; i < arr.length(); ++i)
                 {
                     JSONObject obj = arr.getJSONObject(i);

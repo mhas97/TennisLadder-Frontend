@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.os.Bundle;
-
 import com.google.android.material.tabs.TabLayout;
 
 public class LoginActivity extends AppCompatActivity {
@@ -21,16 +20,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //tabLayout = findViewById(R.id.tabLayout);
+        tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
 
-        //tabLayout.addTab(tabLayout.newTab().setText("Login"));
-        //tabLayout.addTab(tabLayout.newTab().setText("Signup"));
-        //tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
+        tabLayout.addTab(tabLayout.newTab().setText("Login"));
+        tabLayout.addTab(tabLayout.newTab().setText("Signup"));
+        tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
 
         LoginSignupAdapter loginSignupAdapter = new LoginSignupAdapter(getSupportFragmentManager(), getApplicationContext(), 2);
         viewPager.setAdapter(loginSignupAdapter);
-        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
     private class LoginSignupAdapter extends FragmentPagerAdapter {
