@@ -25,7 +25,8 @@ public class LoginActivity extends AppCompatActivity {
 
         tabLayout.addTab(tabLayout.newTab().setText("Login"));
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
-        tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(viewPager);
 
         LoginSignupAdapter loginSignupAdapter = new LoginSignupAdapter(getSupportFragmentManager(), getApplicationContext(), 2);
         viewPager.setAdapter(loginSignupAdapter);
@@ -42,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             this.context = context;
             this.numTabs = numTabs;
         }
+
         @NonNull
         @Override
         public Fragment getItem(int position) {
@@ -50,6 +52,17 @@ public class LoginActivity extends AppCompatActivity {
                     return new LoginFragment();
                 case 1:
                     return new SignupFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position) {
+                case 0:
+                    return "Login";
+                case 1:
+                    return "Signup";
             }
             return null;
         }

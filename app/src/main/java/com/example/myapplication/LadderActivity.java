@@ -20,7 +20,6 @@ public class LadderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ladder);
-
         getLadderData();
     }
 
@@ -39,13 +38,11 @@ public class LadderActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s)
         {
-            try
-            {
+            try {
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("players");
                 ArrayList<TennisUser> players = new ArrayList<TennisUser>();
-                for (int i = 0; i < arr.length(); ++i)
-                {
+                for (int i = 0; i < arr.length(); ++i) {
                     JSONObject obj = arr.getJSONObject(i);
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
@@ -60,8 +57,7 @@ public class LadderActivity extends AppCompatActivity {
                 recyclerView.setAdapter(ladderAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-            } catch (JSONException e)
-            {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
@@ -69,8 +65,8 @@ public class LadderActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids)
         {
-            RequestHandler rqh = new RequestHandler();
-            return rqh.sendGetRequest(API.URL_GET_LADDER_DATA);
+            RequestHandler requestHandler = new RequestHandler();
+            return requestHandler.sendGetRequest(API.URL_GET_LADDER_DATA);
         }
     }
 }
