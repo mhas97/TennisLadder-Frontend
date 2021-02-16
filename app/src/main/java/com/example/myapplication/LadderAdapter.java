@@ -36,6 +36,8 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         if (p.get(position).getHotstreak() == 1)
         {
             holder.hotstreak.setImageResource(R.drawable.hot_streak);
+        } else {
+            holder.hotstreak.setImageResource(0);
         }
     }
 
