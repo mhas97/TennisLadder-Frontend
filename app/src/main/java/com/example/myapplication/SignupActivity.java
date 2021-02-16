@@ -42,7 +42,7 @@ public class SignupActivity extends AppCompatActivity {
         editTextFname = findViewById(R.id.fname_input_signup);
         editTextLname = findViewById(R.id.lname_input_signup);
         spinnerClub = findViewById(R.id.spinner_club_signup);
-        buttonSignup = findViewById(R.id.signup_button);
+        buttonSignup = findViewById(R.id.button_signup);
 
         getClubList();
 
