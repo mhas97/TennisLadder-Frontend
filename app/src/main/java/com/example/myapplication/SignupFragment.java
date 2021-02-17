@@ -19,9 +19,8 @@ import java.util.HashMap;
 
 public class SignupFragment extends Fragment {
 
-    EditText txtEmail, txtPassword, txtContactNo, txtFname, txtLname;
-    Spinner spinnerClub;
-    Button btnSignup;
+    private EditText txtEmail, txtPassword, txtContactNo, txtFname, txtLname;
+    private Spinner spinnerClub;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +31,7 @@ public class SignupFragment extends Fragment {
         txtFname = view.findViewById(R.id.txtEditFname);
         txtLname = view.findViewById(R.id.txtEditLname);
         spinnerClub = view.findViewById(R.id.spinnerClub);
-        btnSignup = view.findViewById(R.id.btnSignup);
+        Button btnSignup = view.findViewById(R.id.btnSignup);
         getClubList();
         btnSignup.setOnClickListener(v -> {
             createUser();
@@ -40,12 +39,12 @@ public class SignupFragment extends Fragment {
         return view;
     }
 
-    private void getClubList() {
+    protected void getClubList() {
         clubRequest clubRequest = new clubRequest();
         clubRequest.execute();
     }
 
-    private void createUser() {
+    protected void createUser() {
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
         String contactno = txtContactNo.getText().toString().trim();
@@ -89,6 +88,7 @@ public class SignupFragment extends Fragment {
     }
 
     private class SignupRequest extends AsyncTask<Void, Void, String> {
+
         HashMap<String, String> params;
 
         SignupRequest(HashMap<String, String> params) {

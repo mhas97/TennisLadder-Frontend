@@ -15,22 +15,21 @@ import java.util.HashMap;
 
 public class LoginFragment extends Fragment {
 
-    EditText txtEmail, txtPassword;
-    Button btnLogin;
+    private EditText txtEmail, txtPassword;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = (ViewGroup) layoutInflater.inflate(R.layout.fragment_login, container, false);
         txtEmail = view.findViewById(R.id.txtEditEmailLogin);
         txtPassword = view.findViewById(R.id.txtEditPasswordLogin);
-        btnLogin = view.findViewById(R.id.btnLogin);
+        Button btnLogin = view.findViewById(R.id.btnLogin);
         btnLogin.setOnClickListener(v -> {
             login();
         });
         return view;
     }
 
-    public void login() {
+    protected void login() {
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
         HashMap<String, String> params = new HashMap<>();

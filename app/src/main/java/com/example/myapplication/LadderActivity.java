@@ -1,11 +1,18 @@
 package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.SearchView;
+import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,23 +21,45 @@ import java.util.Collections;
 
 public class LadderActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
+    private Toolbar toolbar;
+    private LadderAdapter ladderAdapter;
+    private TextView txtSearch;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ladder);
         getLadderData();
+        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        txtSearch = (TextView) findViewById(R.id.txtLadderSearch);
+        recyclerView = (RecyclerView) findViewById(R.id.ladder_recyclerview);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        toolbar.setOnMenuItemClickListener(item -> {    // Remove search tip if they are searching.
+            txtSearch.setVisibility(View.INVISIBLE);
+            return false;
+        });
+
+        // This is hacky, but if they are flinging the recyclerview, they can't be searching! Make the text visible again.
+        recyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {
+            @Override
+            public boolean onFling(int velocityX, int velocityY) {
+                txtSearch.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
     }
 
-    public void getLadderData() {
+    protected void getLadderData() {
         LadderRequest req = new LadderRequest();
         req.execute();
     }
 
     private class LadderRequest extends AsyncTask<Void, Void, String> {
 
-        LadderRequest() { }
+        public LadderRequest() { }
 
         @Override
         protected void onPreExecute() { }
@@ -52,14 +81,18 @@ public class LadderActivity extends AppCompatActivity {
                     players.add(player);
                 }
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
-                recyclerView = findViewById(R.id.ladder_recyclerview);
-                LadderAdapter ladderAdapter = new LadderAdapter(getApplicationContext(), players);
-                recyclerView.setAdapter(ladderAdapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+                setupRecyclerView(players);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+
+        protected void setupRecyclerView(ArrayList<TennisUser> players) {
+            recyclerView = findViewById(R.id.ladder_recyclerview);
+            ladderAdapter = new LadderAdapter(getApplicationContext(), players);
+            recyclerView.setAdapter(ladderAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         }
 
         @Override
@@ -68,5 +101,28 @@ public class LadderActivity extends AppCompatActivity {
             RequestHandler requestHandler = new RequestHandler();
             return requestHandler.sendGetRequest(API.URL_GET_LADDER_DATA);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.ladder_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.ladder_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                txtSearch.setVisibility(View.INVISIBLE);
+                ladderAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+        return true;
     }
 }

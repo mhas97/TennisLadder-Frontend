@@ -10,18 +10,17 @@ import android.content.Context;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 
-public class LoginActivity extends AppCompatActivity {
+import org.jetbrains.annotations.NotNull;
 
-    TabLayout tabLayout;
-    ViewPager viewPager;
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        ViewPager viewPager = findViewById(R.id.viewPager);
 
         tabLayout.addTab(tabLayout.newTab().setText("Login"));
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
@@ -33,18 +32,16 @@ public class LoginActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
-    private class LoginSignupAdapter extends FragmentPagerAdapter {
+    private static class LoginSignupAdapter extends FragmentPagerAdapter {
 
-        Context context;
-        int numTabs;
+        private final int numTabs;
 
         public LoginSignupAdapter(FragmentManager fm, Context context, int numTabs) {
             super(fm);
-            this.context = context;
             this.numTabs = numTabs;
         }
 
-        @NonNull
+        @NotNull
         @Override
         public Fragment getItem(int position) {
             switch (position) {

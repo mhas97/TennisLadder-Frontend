@@ -56,7 +56,7 @@ public class RequestHandler {
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String response;
             while ((response = br.readLine()) != null) {
-                sb.append(response+"\n");
+                sb.append(response).append("\n");
             }
         } catch (Exception e) {
             e.printStackTrace();
