@@ -17,12 +17,14 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     private final ArrayList<TennisUser> p;
     private final ArrayList<TennisUser> completeP;
     private final Context context;
+    private final OnNoteListener onNoteListener;
 
-    public LadderAdapter(Context context, ArrayList<TennisUser> p) {
+    public LadderAdapter(Context context, ArrayList<TennisUser> p, OnNoteListener onNoteListener) {
         this.p = p;
         // Make a copy so they aren't pointing at the same list.
         this.completeP = new ArrayList<TennisUser>(p);
         this.context = context;
+        this.onNoteListener = onNoteListener;
     }
 
     @NonNull
@@ -30,7 +32,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     public LadderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.ladder_row, parent, false);
-        return new LadderViewHolder(view);
+        return new LadderViewHolder(view, onNoteListener);
     }
 
     @Override
@@ -95,18 +97,29 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         }
     };
 
-    public static class LadderViewHolder extends RecyclerView.ViewHolder {
+    public static class LadderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView rank, fname, lname;
         private final ImageView hotstreak;
+        private final OnNoteListener onNoteListener;
 
-        public LadderViewHolder(@NonNull View itemView) {
+        public LadderViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
             rank = itemView.findViewById(R.id.rank_text);
             fname = itemView.findViewById(R.id.fname_text);
             lname = itemView.findViewById(R.id.lname_text);
             hotstreak = itemView.findViewById(R.id.img_hotstreak);
+            this.onNoteListener = onNoteListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener.onNoteClick(getAdapterPosition());
         }
     }
-}
 
+    public interface OnNoteListener {
+        void onNoteClick(int position);
+    }
+}

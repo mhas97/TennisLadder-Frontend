@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,11 +21,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
-public class LadderActivity extends AppCompatActivity {
+public class LadderActivity extends AppCompatActivity implements LadderAdapter.OnNoteListener{
 
     private LadderAdapter ladderAdapter;
     private TextView txtSearch;
     private RecyclerView recyclerView;
+    private LadderAdapter.OnNoteListener onNoteListener = this;
+    private ArrayList<TennisUser> globalPlayers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,14 @@ public class LadderActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
+    public void onNoteClick(int position) {
+        String test = globalPlayers.get(position).getLname();
+        Intent intent = new Intent(this, ChallengeActivity.class);
+        intent.putExtra("name",test);
+        startActivity(intent);
+    }
+
     private class LadderRequest extends AsyncTask<Void, Void, String> {
 
         public LadderRequest() { }
@@ -104,6 +115,7 @@ public class LadderActivity extends AppCompatActivity {
                     players.add(player);
                 }
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
+                globalPlayers = players;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -112,7 +124,7 @@ public class LadderActivity extends AppCompatActivity {
 
         protected void setupRecyclerView(ArrayList<TennisUser> players) {
             recyclerView = findViewById(R.id.ladder_recyclerview);
-            ladderAdapter = new LadderAdapter(getApplicationContext(), players);
+            ladderAdapter = new LadderAdapter(getApplicationContext(), players, onNoteListener);
             recyclerView.setAdapter(ladderAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
