@@ -1,7 +1,9 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,12 @@ import java.util.HashMap;
 
 public class LoginFragment extends Fragment {
 
+    static TennisUser user;
     private EditText txtEmail, txtPassword;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = (ViewGroup) layoutInflater.inflate(R.layout.fragment_login, container, false);
+        View view = layoutInflater.inflate(R.layout.fragment_login, container, false);
         txtEmail = view.findViewById(R.id.txtEditEmailLogin);
         txtPassword = view.findViewById(R.id.txtEditPasswordLogin);
         Button btnLogin = view.findViewById(R.id.btnLogin);
@@ -54,7 +57,24 @@ public class LoginFragment extends Fragment {
         {
             try {
                 JSONObject object = new JSONObject(s);
-                Toast.makeText(getActivity().getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
+                if (object.getString("error").equals("false")) {
+                    JSONObject obj = object.getJSONObject("player");
+                    int playerID = Integer.parseInt(obj.getString("playerid"));
+                    String email = obj.getString("email");
+                    String contactNo = obj.getString("contactno");
+                    String fname = obj.getString("fname");
+                    String lname = obj.getString("lname");
+                    int clubID = Integer.parseInt(obj.getString("clubid"));
+                    int elo = Integer.parseInt(obj.getString("elo"));
+                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubID, elo);
+                    Intent intent = new Intent(getActivity(), LadderActivity.class);
+                    Bundle extras = new Bundle();
+                    extras.putParcelable("user", user);
+                    intent.putExtras(extras);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Incorrect username or password", Toast.LENGTH_SHORT).show();
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

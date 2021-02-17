@@ -28,11 +28,20 @@ public class LadderActivity extends AppCompatActivity implements LadderAdapter.O
     private RecyclerView recyclerView;
     private LadderAdapter.OnNoteListener onNoteListener = this;
     private ArrayList<TennisUser> globalPlayers;
+    private TennisUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ladder);
+
+        // In order to track the logged in user, send some important info from the login procedure.
+        // This is passed and retrieved using intents, in this case my player class implements the
+        // Parcelable interface, allowing objects to be passed between activities.
+        Intent loginIntent = getIntent();
+        Bundle loginExtras = loginIntent.getExtras();
+        user = loginExtras.getParcelable("user");
+
         getLadderData();
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         txtSearch = findViewById(R.id.txtLadderSearch);
@@ -84,9 +93,12 @@ public class LadderActivity extends AppCompatActivity implements LadderAdapter.O
 
     @Override
     public void onNoteClick(int position) {
-        String test = globalPlayers.get(position).getLname();
+        String opponent = globalPlayers.get(position).getLname();
         Intent intent = new Intent(this, ChallengeActivity.class);
-        intent.putExtra("name",test);
+        Bundle extras = new Bundle();
+        extras.putParcelable("user", user);
+        extras.putString("opponent ", opponent);
+        intent.putExtras(extras);
         startActivity(intent);
     }
 
@@ -109,9 +121,10 @@ public class LadderActivity extends AppCompatActivity implements LadderAdapter.O
                     int playerID = Integer.parseInt(obj.getString("playerid"));
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
+                    int clubID = Integer.parseInt(obj.getString("clubid"));
                     int elo = Integer.parseInt(obj.getString("elo"));
                     int hotstreak = Integer.parseInt(obj.getString("hotstreak"));
-                    TennisUser player = new TennisUser(playerID, fname, lname, elo, hotstreak);
+                    TennisUser player = new TennisUser(playerID, fname, lname, clubID, elo, hotstreak);
                     players.add(player);
                 }
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
