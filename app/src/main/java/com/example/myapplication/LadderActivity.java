@@ -18,10 +18,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public class LadderActivity extends AppCompatActivity {
 
-    private Toolbar toolbar;
     private LadderAdapter ladderAdapter;
     private TextView txtSearch;
     private RecyclerView recyclerView;
@@ -31,12 +31,11 @@ public class LadderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ladder);
         getLadderData();
-        toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        txtSearch = (TextView) findViewById(R.id.txtLadderSearch);
-        recyclerView = (RecyclerView) findViewById(R.id.ladder_recyclerview);
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        txtSearch = findViewById(R.id.txtLadderSearch);
+        recyclerView = findViewById(R.id.ladder_recyclerview);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
         toolbar.setOnMenuItemClickListener(item -> {    // Remove search tip if they are searching.
             txtSearch.setVisibility(View.INVISIBLE);
             return false;
@@ -55,52 +54,6 @@ public class LadderActivity extends AppCompatActivity {
     protected void getLadderData() {
         LadderRequest req = new LadderRequest();
         req.execute();
-    }
-
-    private class LadderRequest extends AsyncTask<Void, Void, String> {
-
-        public LadderRequest() { }
-
-        @Override
-        protected void onPreExecute() { }
-
-        @Override
-        protected void onPostExecute(String s)
-        {
-            try {
-                JSONObject object = new JSONObject(s);
-                JSONArray arr = object.getJSONArray("players");
-                ArrayList<TennisUser> players = new ArrayList<TennisUser>();
-                for (int i = 0; i < arr.length(); ++i) {
-                    JSONObject obj = arr.getJSONObject(i);
-                    String fname = obj.getString("fname");
-                    String lname = obj.getString("lname");
-                    int elo = Integer.parseInt(obj.getString("elo"));
-                    int hotstreak = Integer.parseInt(obj.getString("hotstreak"));
-                    TennisUser player = new TennisUser(fname, lname, elo, hotstreak);
-                    players.add(player);
-                }
-                Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
-                setupRecyclerView(players);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        protected void setupRecyclerView(ArrayList<TennisUser> players) {
-            recyclerView = findViewById(R.id.ladder_recyclerview);
-            ladderAdapter = new LadderAdapter(getApplicationContext(), players);
-            recyclerView.setAdapter(ladderAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-        }
-
-        @Override
-        protected String doInBackground(Void... voids)
-        {
-            RequestHandler requestHandler = new RequestHandler();
-            return requestHandler.sendGetRequest(API.URL_GET_LADDER_DATA);
-        }
     }
 
     @Override
@@ -124,5 +77,52 @@ public class LadderActivity extends AppCompatActivity {
             }
         });
         return true;
+    }
+
+    private class LadderRequest extends AsyncTask<Void, Void, String> {
+
+        public LadderRequest() { }
+
+        @Override
+        protected void onPreExecute() { }
+
+        @Override
+        protected void onPostExecute(String s)
+        {
+            ArrayList<TennisUser> players = new ArrayList<>();
+            try {
+                JSONObject object = new JSONObject(s);
+                JSONArray arr = object.getJSONArray("players");
+                for (int i = 0; i < arr.length(); ++i) {
+                    JSONObject obj = arr.getJSONObject(i);
+                    int playerID = Integer.parseInt(obj.getString("playerid"));
+                    String fname = obj.getString("fname");
+                    String lname = obj.getString("lname");
+                    int elo = Integer.parseInt(obj.getString("elo"));
+                    int hotstreak = Integer.parseInt(obj.getString("hotstreak"));
+                    TennisUser player = new TennisUser(playerID, fname, lname, elo, hotstreak);
+                    players.add(player);
+                }
+                Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            setupRecyclerView(players);
+        }
+
+        protected void setupRecyclerView(ArrayList<TennisUser> players) {
+            recyclerView = findViewById(R.id.ladder_recyclerview);
+            ladderAdapter = new LadderAdapter(getApplicationContext(), players);
+            recyclerView.setAdapter(ladderAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
+        }
+
+        @Override
+        protected String doInBackground(Void... voids)
+        {
+            RequestHandler requestHandler = new RequestHandler();
+            return requestHandler.sendGetRequest(API_URL.URL_GET_LADDER_DATA);
+        }
     }
 }

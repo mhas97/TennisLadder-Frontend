@@ -2,7 +2,7 @@ package com.example.myapplication;
 
 public class TennisUser {
 
-    private int playerid;
+    private int playerID;
     private String email;
     private String password;
     private String contactno;
@@ -12,15 +12,16 @@ public class TennisUser {
     private int elo;
     private int hotstreak;
 
-    public TennisUser(String fname, String lname, int elo, int hotstreak) {
+    public TennisUser(int playerID, String fname, String lname, int elo, int hotstreak) {
+        this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
         this.elo = elo;
         this.hotstreak = hotstreak;
     }
 
-    public TennisUser(int playerid, String email, String password, String contactno, String fname, String lname, int clubid, int elo) {
-        this.playerid = playerid;
+    public TennisUser(int playerID, String email, String password, String contactno, String fname, String lname, int clubid, int elo) {
+        this.playerID = playerID;
         this.email = email;
         this.password = password;
         this.contactno = contactno;
@@ -30,9 +31,7 @@ public class TennisUser {
         this.elo = elo;
     }
 
-    public int getPlayerid() {
-        return playerid;
-    }
+    public int getplayerID() { return playerID; }
 
     public String getEmail() {
         return email;

@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment {
         @Override
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
-            return requestHandler.sendPostRequest(API.URL_LOGIN, params);
+            return requestHandler.sendPostRequest(API_URL.URL_LOGIN, params);
         }
     }
 }

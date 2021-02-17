@@ -60,7 +60,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
      * Filter class performs filtering on the background thread, won't freeze the app.
      * Automatically published to UI thread.
      */
-    private Filter ladderFilter = new Filter() {
+    private final Filter ladderFilter = new Filter() {
 
         /**
          * Pass a filter over the complete list to search for players in the ladder.

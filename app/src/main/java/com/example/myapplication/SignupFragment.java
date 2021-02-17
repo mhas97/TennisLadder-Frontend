@@ -83,7 +83,7 @@ public class SignupFragment extends Fragment {
         @Override
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
-            return requestHandler.sendGetRequest(API.URL_GET_CLUBS);
+            return requestHandler.sendGetRequest(API_URL.URL_GET_CLUBS);
         }
     }
 
@@ -111,7 +111,7 @@ public class SignupFragment extends Fragment {
         @Override
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
-            return requestHandler.sendPostRequest(API.URL_CREATE_PLAYER, params);
+            return requestHandler.sendPostRequest(API_URL.URL_CREATE_PLAYER, params);
         }
     }
 }
