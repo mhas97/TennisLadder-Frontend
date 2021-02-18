@@ -64,9 +64,10 @@ public class LoginFragment extends Fragment {
                     String contactNo = obj.getString("contactno");
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
-                    int clubID = Integer.parseInt(obj.getString("clubid"));
+                    String clubName = obj.getString("clubname");
                     int elo = Integer.parseInt(obj.getString("elo"));
-                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubID, elo);
+                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubName, elo);
+
                     Intent intent = new Intent(getActivity(), LadderActivity.class);
                     Bundle extras = new Bundle();
                     extras.putParcelable("user", user);

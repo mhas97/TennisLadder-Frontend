@@ -7,28 +7,30 @@
     tools:context=".ChallengeActivity">
 
     <Spinner
-        android:id="@+id/spinner2"
+        android:id="@+id/spinnerChallengeTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:entries="@array/times"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+        app:layout_constraintTop_toBottomOf="@+id/calenderChallengeDate" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Create Challenge"
-        android:textSize="24sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/txtUser"
+        android:id="@+id/txtChallengeUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -36,8 +38,8 @@
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="TextView"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/txtOpponent"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/txtChallengeOpponent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -49,12 +51,12 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="VS"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/txtOpponent"
-        app:layout_constraintStart_toEndOf="@+id/txtUser"
-        app:layout_constraintTop_toBottomOf="@+id/txtOpponent" />
+        app:layout_constraintEnd_toStartOf="@+id/txtChallengeOpponent"
+        app:layout_constraintStart_toEndOf="@+id/txtChallengeUser"
+        app:layout_constraintTop_toBottomOf="@+id/txtChallengeOpponent" />
 
     <TextView
-        android:id="@+id/txtOpponent"
+        android:id="@+id/txtChallengeOpponent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -62,23 +64,23 @@
         android:layout_marginRight="8dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="TextView"
-        android:textSize="14sp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/txtUser"
+        app:layout_constraintStart_toEndOf="@+id/txtChallengeUser"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <CalendarView
-        android:id="@+id/calendarView"
+        android:id="@+id/calenderChallengeDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerClubChallenge" />
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/spinnerClubChallenge"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -87,12 +89,12 @@
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnSubmitChallenge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="CREATE CHALLENGE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerChallengeTime" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -8,6 +8,7 @@ public class API_URL {
     public static final String URL_CREATE_PLAYER = ROOT_URL + "create_player";
     public static final String URL_GET_PLAYER_DATA = ROOT_URL + "get_player_data&id=";
     public static final String URL_GET_LADDER_DATA = ROOT_URL + "get_ladder_data";
+    public static final String URL_GET_PROFILE_DATA = ROOT_URL + "get_profile_data&id=";
     public static final String URL_UPDATE_PLAYER = ROOT_URL + "update_player";
     public static final String URL_DELETE_PLAYER = ROOT_URL + "delete_player&id=";
     public static final String URL_GET_CLUBS = ROOT_URL + "get_clubs";

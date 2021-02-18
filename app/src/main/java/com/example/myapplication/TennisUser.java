@@ -16,28 +16,28 @@ public class TennisUser implements Parcelable {
     private String contactno;
     private String fname;
     private String lname;
-    private int clubID;
+    private String clubName;
     private int elo;
     private int hotstreak;
 
     // For fetching and displaying ladder data
-    public TennisUser(int playerID, String fname, String lname, int clubID, int elo, int hotstreak) {
+    public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak) {
         this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
-        this.clubID = clubID;
+        this.clubName = clubName;
         this.elo = elo;
         this.hotstreak = hotstreak;
     }
 
     // For storing a users info upon signing in
-    public TennisUser(int playerID, String email, String contactno, String fname, String lname, int clubID, int elo) {
+    public TennisUser(int playerID, String email, String contactno, String fname, String lname, String clubName, int elo) {
         this.playerID = playerID;
         this.email = email;
         this.contactno = contactno;
         this.fname = fname;
         this.lname = lname;
-        this.clubID = clubID;
+        this.clubName = clubName;
         this.elo = elo;
     }
 
@@ -47,7 +47,7 @@ public class TennisUser implements Parcelable {
         contactno = in.readString();
         fname = in.readString();
         lname = in.readString();
-        clubID = in.readInt();
+        clubName = in.readString();
         elo = in.readInt();
     }
 
@@ -69,8 +69,8 @@ public class TennisUser implements Parcelable {
         return lname;
     }
 
-    public int getClubID() {
-        return clubID;
+    public String getClubName() {
+        return clubName;
     }
 
     public int getElo() {
@@ -103,7 +103,7 @@ public class TennisUser implements Parcelable {
         dest.writeString(contactno);
         dest.writeString(fname);
         dest.writeString(lname);
-        dest.writeInt(clubID);
+        dest.writeString(clubName);
         dest.writeInt(elo);
     }
 }
