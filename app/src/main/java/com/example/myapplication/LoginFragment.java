@@ -3,7 +3,6 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +67,7 @@ public class LoginFragment extends Fragment {
                     int elo = Integer.parseInt(obj.getString("elo"));
                     user = new TennisUser(playerID, email, contactNo, fname, lname, clubName, elo);
 
-                    Intent intent = new Intent(getActivity(), LadderActivity.class);
+                    Intent intent = new Intent(getActivity(), MainActivity.class);
                     Bundle extras = new Bundle();
                     extras.putParcelable("user", user);
                     intent.putExtras(extras);

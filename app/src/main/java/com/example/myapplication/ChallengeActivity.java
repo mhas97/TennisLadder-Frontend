@@ -1,27 +1,21 @@
 package com.example.myapplication;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
-
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 public class ChallengeActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
@@ -78,14 +72,12 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
             tpf.show(getSupportFragmentManager(), "time picker");
         });
 
-
-
         // Onclick listener for the button, take all challenge data.
         btnSubmitChallenge.setOnClickListener(v -> {
             int userID = user.getplayerID();
             int opponentID = opponent.getplayerID();
             String location = spinnerChallengeClub.getSelectedItem().toString();
-            // In the end it was more elegant to send the API the UNIX time and convert there for db storage.
+            // In the end it was more elegant to send the API UNIX time and convert there for db storage.
             // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = String.valueOf(date_seconds);
             // Create the challenge.
