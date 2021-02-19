@@ -1,26 +1,34 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
-public class ChallengeActivity extends AppCompatActivity {
+public class ChallengeActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+
+    private long date_seconds;
+    private String time;
+    private Button btnTimePicker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +44,10 @@ public class ChallengeActivity extends AppCompatActivity {
         // Locate elements.
         TextView txtUser = findViewById(R.id.txtChallengeUser);
         TextView txtOpponent = findViewById(R.id.txtChallengeOpponent);
-        CalendarView calenderViewChallenge = findViewById(R.id.calenderChallengeDate);
+        CalendarView calendarViewChallenge = findViewById(R.id.calendarChallengeDate);
         Spinner spinnerChallengeClub = findViewById(R.id.spinnerChallengeClub);
-        Spinner spinnerChallengeTime = findViewById(R.id.spinnerChallengeTime);
+        btnTimePicker = findViewById(R.id.btnTimePicker);
+        //Spinner spinnerChallengeTime = findViewById(R.id.spinnerChallengeTime);
         Button btnSubmitChallenge = findViewById(R.id.btnSubmitChallenge);
 
         // Set elements to correct names.
@@ -56,19 +65,38 @@ public class ChallengeActivity extends AppCompatActivity {
         ArrayAdapter<String> clubAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, clubs);
         spinnerChallengeClub.setAdapter(clubAdapter);
 
+        date_seconds = calendarViewChallenge.getDate() / 1000;
+
+        calendarViewChallenge.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, dayOfMonth);
+            date_seconds = calendar.getTimeInMillis() / 1000;
+        });
+
+        btnTimePicker.setOnClickListener(v -> {
+            DialogFragment tpf = new TimePickerFragment();
+            tpf.show(getSupportFragmentManager(), "time picker");
+        });
+
+
+
         // Onclick listener for the button, take all challenge data.
         btnSubmitChallenge.setOnClickListener(v -> {
             int userID = user.getplayerID();
             int opponentID = opponent.getplayerID();
             String location = spinnerChallengeClub.getSelectedItem().toString();
-            SimpleDateFormat sdf = new SimpleDateFormat();
-            String date = sdf.format(new Date(calenderViewChallenge.getDate()));
-            date = date.substring(0, 10);   // truncate so it only holds date and not date+time.
-            String time = spinnerChallengeTime.getSelectedItem().toString();
-
+            // In the end it was more elegant to send the API the UNIX time and convert there for db storage.
+            // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String date = String.valueOf(date_seconds);
             // Create the challenge.
             createChallenge(location, date, time, userID, opponentID);
         });
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        time = hourOfDay + ":" + minute;
+        btnTimePicker.setText(time);
     }
 
     /**
@@ -77,7 +105,7 @@ public class ChallengeActivity extends AppCompatActivity {
     protected void createChallenge(String location, String date, String time, int userID, int opponentID) {
         // Must cast to string for parameters hashmap, convert back in API code.
         HashMap<String, String> params = new HashMap<>();
-        params.put("clubname", String.valueOf(location));
+        params.put("clubname", location);
         params.put("date", date);
         params.put("time", time);
         ChallengeRequest createChallenge = new ChallengeRequest(params, userID, opponentID);
@@ -87,10 +115,13 @@ public class ChallengeActivity extends AppCompatActivity {
     private class ChallengeRequest extends AsyncTask<Void, Void, String> {
 
         private final HashMap<String, String> params;
-        private int userID, opponentID;
+        private final int userID;
+        private final int opponentID;
 
         public ChallengeRequest(HashMap<String, String> params, int userID, int opponentID) {
             this.params = params;
+            this.userID = userID;
+            this.opponentID = opponentID;
         }
 
         /**
@@ -100,21 +131,22 @@ public class ChallengeActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(String s) {
-            HashMap<String, String> newParams = new HashMap<>();
+            HashMap<String, String> userParams = new HashMap<>();
+            HashMap<String, String> opponentParams = new HashMap<>();
             try {
                 JSONObject object = new JSONObject(s);
                 String challengeID = object.getString("challengeid");
-                newParams.put("challengeid", challengeID);
-                newParams.put("playerid", String.valueOf(userID));
-                newParams.put("didinitiate", "1");
-                CreatePlayerChallenge createUserChallenge = new CreatePlayerChallenge(newParams);
+
+                userParams.put("challengeid", challengeID);
+                userParams.put("playerid", String.valueOf(userID));
+                userParams.put("didinitiate", "1");
+                CreatePlayerChallenge createUserChallenge = new CreatePlayerChallenge(userParams);
                 createUserChallenge.execute();
 
-                newParams.clear();
-                newParams.put("challengeid", challengeID);
-                newParams.put("playerid", String.valueOf(opponentID));
-                newParams.put("didinitiate", "0");
-                CreatePlayerChallenge createOpponentChallenge = new CreatePlayerChallenge(newParams);
+                opponentParams.put("challengeid", challengeID);
+                opponentParams.put("playerid", String.valueOf(opponentID));
+                opponentParams.put("didinitiate", "0");
+                CreatePlayerChallenge createOpponentChallenge = new CreatePlayerChallenge(opponentParams);
                 createOpponentChallenge.execute();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -142,6 +174,4 @@ public class ChallengeActivity extends AppCompatActivity {
             return requestHandler.sendPostRequest(API_URL.URL_CREATE_PLAYER_CHALLENGE, params);
         }
     }
-
-
 }
