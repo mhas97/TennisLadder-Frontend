@@ -27,7 +27,6 @@ import java.util.Objects;
 
 public class LadderFragment extends Fragment implements LadderAdapter.OnNoteListener {
 
-    private TennisUser user;
     private ArrayList<TennisUser> globalPlayers;
     private TextView txtSearch;
     private RecyclerView recyclerView;
@@ -37,13 +36,6 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_ladder, container, false);
-
-        // In order to track the logged in user, send some important info from the login procedure.
-        // This is passed and retrieved using intents, in this case my player class implements the
-        // Parcelable interface, allowing objects to be passed between activities.
-        Intent ladderIntent = getActivity().getIntent();
-        Bundle ladderExtras = ladderIntent.getExtras();
-        user = ladderExtras.getParcelable("user");
 
         getLadderData();
         setHasOptionsMenu(true);
@@ -99,10 +91,9 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
     @Override
     public void onNoteClick(int position) {
         TennisUser tappedPlayer = globalPlayers.get(position);
-
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
         Bundle extras = new Bundle();
-        extras.putParcelable("user", user);
+        extras.putParcelable("user", MainActivity.getUser());
         extras.putParcelable("tappedPlayer", tappedPlayer);
         intent.putExtras(extras);
         startActivity(intent);

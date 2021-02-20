@@ -16,13 +16,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TennisUser user;
+    private static TennisUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // In order to track the logged in user, send some important info from the login procedure.
+        // This is passed and retrieved using intents, in this case my player class implements the
+        // Parcelable interface, allowing objects to be passed between activities.
         Intent mainIntent = getIntent();
         Bundle mainExtras = mainIntent.getExtras();
         user = mainExtras.getParcelable("user");
@@ -39,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         MainAdapter mainAdapter= new MainAdapter(getSupportFragmentManager(), getApplicationContext(), 3);
         viewPager.setAdapter(mainAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+    }
+
+    public static TennisUser getUser() {
+        return user;
     }
 
     private static class MainAdapter extends FragmentPagerAdapter {

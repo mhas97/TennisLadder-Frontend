@@ -20,7 +20,13 @@ public class TennisUser implements Parcelable {
     private int elo;
     private int hotstreak;
 
-    // For fetching and displaying ladder data
+    public TennisUser(int playerID, String fname, String lname) {
+        this.playerID = playerID;
+        this.fname = fname;
+        this.lname = lname;
+    }
+
+    // For fetching and displaying ladder and profile
     public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak) {
         this.playerID = playerID;
         this.fname = fname;

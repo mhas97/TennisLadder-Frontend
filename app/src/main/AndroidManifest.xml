@@ -21,8 +21,7 @@
         </activity>
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ChallengeActivity" />
-        <activity android:name=".LadderActivity"></activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>

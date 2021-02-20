@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 public class ProfileActivity extends AppCompatActivity {
 
     private ImageView imgProfile;
-    private TextView txtName, txtClub;
-    private Button btnChallenge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +22,9 @@ public class ProfileActivity extends AppCompatActivity {
         TennisUser user = profileExtras.getParcelable("user");
         TennisUser tappedPlayer = profileExtras.getParcelable("tappedPlayer");
 
-        txtName = (TextView) findViewById(R.id.txtPlayerName);
-        txtClub = (TextView) findViewById(R.id.txtPlayerClub);
-        btnChallenge = findViewById(R.id.btnChallenge);
+        TextView txtName = (TextView) findViewById(R.id.txtPlayerName);
+        TextView txtClub = (TextView) findViewById(R.id.txtPlayerClub);
+        Button btnChallenge = findViewById(R.id.btnChallenge);
         String name = tappedPlayer.getFname() + " " + tappedPlayer.getLname();
         txtName.setText(name);
         String club = tappedPlayer.getClubName();
