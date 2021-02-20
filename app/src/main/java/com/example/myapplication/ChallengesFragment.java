@@ -6,24 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class ChallengesFragment extends Fragment {
 
-    private ArrayList<TennisChallenge> challenges;
     private RecyclerView recyclerView;
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_challenges, container, false);
-        recyclerView = view.findViewById(R.id.ladder_recyclerview);
-        challenges = new ArrayList<TennisChallenge>();
+        recyclerView = view.findViewById(R.id.challenges_recyclerview);
         getChallenges();
         return view;
     }
@@ -51,16 +48,19 @@ public class ChallengesFragment extends Fragment {
                     String date = obj.getString("date");
                     String time = obj.getString("time");
                     TennisChallenge challenge = new TennisChallenge(challengeID, new TennisUser(opponentID, opponentFname, opponentLname), date, time);
-                    challenges.add(challenge);
+                    c.add(challenge);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            setupRecyclerView(challenges);
+            setupRecyclerView(c);
         }
 
         protected void setupRecyclerView(ArrayList<TennisChallenge> challenges) {
-
+            ChallengesAdapter challengesAdapter = new ChallengesAdapter(getActivity().getApplicationContext(), challenges);
+            recyclerView.setAdapter(challengesAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL));
         }
 
         @Override
