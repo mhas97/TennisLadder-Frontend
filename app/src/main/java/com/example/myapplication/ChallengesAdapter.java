@@ -1,11 +1,13 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
@@ -29,9 +31,14 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
 
     @Override
     public void onBindViewHolder(@NonNull ChallengeViewHolder holder, int position) {
-        holder.date.setText(c.get(position).getDate());
-        holder.time.setText(c.get(position).getTime());
-        holder.opponent.setText(c.get(position).getOpponent().getFname());
+        if (c.get(position).getDidInitiate() == 0) {    // -1 flag indicates a match has not yet been played.
+            holder.status.setText("Incoming Challenge");
+        }
+        else {
+            holder.status.setText("Outgoing Challenge");
+        }
+        String opponentName = c.get(position).getOpponent().getFname() + " " + c.get(position).getOpponent().getLname();
+        holder.opponent.setText(opponentName);
     }
 
     @Override
@@ -41,12 +48,13 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
 
     public static class ChallengeViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView date, time, opponent;
+        private final CardView cvResult;
+        private final TextView status, opponent;
 
         public ChallengeViewHolder(@NonNull View itemView) {
             super(itemView);
-            date = itemView.findViewById(R.id.txtDate);
-            time = itemView.findViewById(R.id.txtTime);
+            cvResult = itemView.findViewById(R.id.cvResult);
+            status = itemView.findViewById(R.id.txtChallengeStatus);
             opponent = itemView.findViewById(R.id.txtOpponent);
         }
     }

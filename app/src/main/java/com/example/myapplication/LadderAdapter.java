@@ -46,6 +46,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         } else {
             holder.hotstreak.setImageResource(0);
         }
+        holder.elo.setText(String.valueOf(p.get(position).getElo()));
     }
 
     @Override
@@ -99,7 +100,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
 
     public static class LadderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final TextView rank, fname, lname;
+        private final TextView rank, fname, lname, elo;
         private final ImageView hotstreak;
         private final OnNoteListener onNoteListener;
 
@@ -109,6 +110,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
             fname = itemView.findViewById(R.id.fname_text);
             lname = itemView.findViewById(R.id.lname_text);
             hotstreak = itemView.findViewById(R.id.img_hotstreak);
+            elo = itemView.findViewById(R.id.elo_text);
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);
         }

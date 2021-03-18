@@ -42,12 +42,14 @@ public class ChallengesFragment extends Fragment {
                 for (int i = 0; i < arr.length(); ++i) {
                     JSONObject obj = arr.getJSONObject(i);
                     int challengeID = Integer.parseInt(obj.getString("challengeid"));
+                    int didInitiate = Integer.parseInt(obj.getString("didinitiate"));
                     int opponentID = Integer.parseInt(obj.getString("opponentid"));
                     String opponentFname = obj.getString("fname");
                     String opponentLname = obj.getString("lname");
                     String date = obj.getString("date");
                     String time = obj.getString("time");
-                    TennisChallenge challenge = new TennisChallenge(challengeID, new TennisUser(opponentID, opponentFname, opponentLname), date, time);
+                    String location = obj.getString("location");
+                    TennisChallenge challenge = new TennisChallenge(challengeID, new TennisUser(opponentID, opponentFname, opponentLname), date, time, location, didInitiate);
                     c.add(challenge);
                 }
             } catch (JSONException e) {
