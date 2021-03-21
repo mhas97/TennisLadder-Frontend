@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -17,6 +18,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChallengeActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
@@ -41,7 +44,6 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
         CalendarView calendarViewChallenge = findViewById(R.id.calendarChallengeDate);
         Spinner spinnerChallengeClub = findViewById(R.id.spinnerChallengeClub);
         btnTimePicker = findViewById(R.id.btnTimePicker);
-        //Spinner spinnerChallengeTime = findViewById(R.id.spinnerChallengeTime);
         Button btnSubmitChallenge = findViewById(R.id.btnSubmitChallenge);
 
         // Set elements to correct names.
@@ -82,6 +84,14 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
             String date = String.valueOf(date_seconds);
             // Create the challenge.
             createChallenge(location, date, time, userID, opponentID);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtras(challengeExtras);
+            startActivity(intent);
         });
     }
 

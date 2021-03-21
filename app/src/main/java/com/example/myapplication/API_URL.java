@@ -3,7 +3,7 @@ package com.example.myapplication;
 // [REF: https://www.simplifiedcoding.net/android-mysql-tutorial-to-perform-basic-crud-operation/#Android-MySQL-Tutorial]
 
 public class API_URL {
-    private static final String ROOT_URL = "http://172.23.153.161/Android/v3/tennisapi.php?tennisapi=";
+    private static final String ROOT_URL = "http://192.168.1.11/Android/v3/tennisapi.php?tennisapi=";
     public static final String URL_LOGIN = ROOT_URL + "login";
     public static final String URL_CREATE_PLAYER = ROOT_URL + "create_player";
     public static final String URL_GET_LADDER_DATA = ROOT_URL + "get_ladder_data";
@@ -14,4 +14,5 @@ public class API_URL {
     public static final String URL_GET_CLUBS = ROOT_URL + "get_clubs";
     public static final String URL_UPDATE_PLAYER = ROOT_URL + "update_player";
     public static final String URL_DELETE_PLAYER = ROOT_URL + "delete_player";
+    public static final String URL_CANCEL_CHALLENGE = ROOT_URL + "cancel_challenge&challengeid=";
 }

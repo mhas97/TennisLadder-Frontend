@@ -22,6 +22,7 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ChallengeActivity" />
         <activity android:name=".MainActivity" />
+        <activity android:name=".ChallengeViewerActivity" />
     </application>
 
 </manifest>

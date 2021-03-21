@@ -6,7 +6,7 @@ import android.os.Parcelable;
 /**
  * This class implements the Parcelable interface, allowing user objects
  * to be passed between pages. This is better practice than having static
- * global variables and is useful for displaying user info and creating
+ * global user variables and is useful for displaying user info and creating
  * challenges.
  */
 public class TennisUser implements Parcelable {
@@ -26,7 +26,7 @@ public class TennisUser implements Parcelable {
         this.lname = lname;
     }
 
-    // For fetching and displaying ladder and profile
+    // For fetching and displaying ladder and profile data.
     public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak) {
         this.playerID = playerID;
         this.fname = fname;
@@ -36,7 +36,7 @@ public class TennisUser implements Parcelable {
         this.hotstreak = hotstreak;
     }
 
-    // For storing a users info upon signing in
+    // For storing a users info upon signing in.
     public TennisUser(int playerID, String email, String contactno, String fname, String lname, String clubName, int elo) {
         this.playerID = playerID;
         this.email = email;
@@ -47,6 +47,7 @@ public class TennisUser implements Parcelable {
         this.elo = elo;
     }
 
+    // User data for parceling.
     protected TennisUser(Parcel in) {
         playerID = in.readInt();
         email = in.readString();
