@@ -12,7 +12,6 @@ public class API_URL {
     public static final String URL_GET_CHALLENGES = ROOT_URL + "get_challenges&playerid=";
     public static final String URL_GET_MATCH_HISTORY = ROOT_URL + "get_match_history&playerid=";
     public static final String URL_GET_CLUBS = ROOT_URL + "get_clubs";
-    public static final String URL_UPDATE_PLAYER = ROOT_URL + "update_player";
-    public static final String URL_DELETE_PLAYER = ROOT_URL + "delete_player";
+    public static final String URL_ACCEPT_CHALLENGE = ROOT_URL + "accept_challenge&challengeid=";
     public static final String URL_CANCEL_CHALLENGE = ROOT_URL + "cancel_challenge&challengeid=";
 }

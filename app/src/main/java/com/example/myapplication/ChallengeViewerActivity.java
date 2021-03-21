@@ -3,7 +3,6 @@ package com.example.myapplication;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.net.NetworkRequest;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
@@ -24,6 +23,9 @@ public class ChallengeViewerActivity extends AppCompatActivity {
             Button cancel = findViewById(R.id.btn_cancel_accepted);
 
             reportScore.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ReportScoreActivity.class);
+                intent.putExtras(challengeExtras);
+                startActivity(intent);
             });
 
             cancel.setOnClickListener(v -> {
@@ -33,6 +35,14 @@ public class ChallengeViewerActivity extends AppCompatActivity {
                 builder.setMessage("Are you sure you want to cancel this challenge?");
                 builder.setPositiveButton("Yes", (dialog, which) -> {
                     cancelChallenge(challenge.getChallengeID());
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtras(challengeExtras);
+                    startActivity(intent);
                 });
                 builder.setNegativeButton("No", (dialog, which) -> {
                 });
@@ -45,11 +55,47 @@ public class ChallengeViewerActivity extends AppCompatActivity {
             Button accept = findViewById(R.id.btn_accept);
             Button decline = findViewById(R.id.btn_decline);
             accept.setOnClickListener(v -> {
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setTitle("Accept challenge");
+                builder.setMessage("Are you sure you want to accept this challenge?");
+                builder.setPositiveButton("Yes", (dialog, which) -> {
+                    acceptChallenge(challenge.getChallengeID());
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtras(challengeExtras);
+                    startActivity(intent);
+                });
+                builder.setNegativeButton("No", (dialog, which) -> {
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             });
 
             decline.setOnClickListener(v -> {
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setCancelable(true);
+                builder.setTitle("Decline challenge");
+                builder.setMessage("Are you sure you want to decline this challenge?");
+                builder.setPositiveButton("Yes", (dialog, which) -> {
+                    cancelChallenge(challenge.getChallengeID());
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtras(challengeExtras);
+                    startActivity(intent);
+                });
+                builder.setNegativeButton("No", (dialog, which) -> {
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             });
 
         }
@@ -63,6 +109,14 @@ public class ChallengeViewerActivity extends AppCompatActivity {
                 builder.setMessage("Are you sure you want to cancel this challenge?");
                 builder.setPositiveButton("Yes", (dialog, which) -> {
                     cancelChallenge(challenge.getChallengeID());
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.putExtras(challengeExtras);
+                    startActivity(intent);
                 });
                 builder.setNegativeButton("No", (dialog, which) -> {
                 });
@@ -88,6 +142,11 @@ public class ChallengeViewerActivity extends AppCompatActivity {
         cancelChallenge.execute();
     }
 
+    protected void acceptChallenge(int challengeID) {
+        AcceptChallenge acceptChallenge = new AcceptChallenge(challengeID);
+        acceptChallenge.execute();
+    }
+
     private static class CancelChallenge extends AsyncTask<Void, Void, String> {
 
         private final int challengeID;
@@ -105,6 +164,26 @@ public class ChallengeViewerActivity extends AppCompatActivity {
         protected String doInBackground(Void... voids) {
             RequestHandler req = new RequestHandler();
             return req.sendGetRequest(API_URL.URL_CANCEL_CHALLENGE + challengeID);
+        }
+    }
+
+    private static class AcceptChallenge extends AsyncTask<Void, Void, String> {
+
+        private final int challengeID;
+
+        public AcceptChallenge(int challengeID) {
+            this.challengeID = challengeID;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler req = new RequestHandler();
+            return req.sendGetRequest(API_URL.URL_ACCEPT_CHALLENGE + challengeID);
         }
     }
 }

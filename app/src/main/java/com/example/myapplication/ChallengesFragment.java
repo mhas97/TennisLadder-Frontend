@@ -35,6 +35,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
         TennisChallenge tappedChallenge = challenges.get(position);
         Intent intent = new Intent(getActivity(), ChallengeViewerActivity.class);
         Bundle extras = new Bundle();
+        extras.putParcelable("user", MainActivity.getUser());
         extras.putParcelable("challenge", tappedChallenge);
         intent.putExtras(extras);
         startActivity(intent);
