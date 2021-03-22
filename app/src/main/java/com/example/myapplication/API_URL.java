@@ -14,4 +14,5 @@ public class API_URL {
     public static final String URL_GET_CLUBS = ROOT_URL + "get_clubs";
     public static final String URL_ACCEPT_CHALLENGE = ROOT_URL + "accept_challenge&challengeid=";
     public static final String URL_CANCEL_CHALLENGE = ROOT_URL + "cancel_challenge&challengeid=";
+    public static final String URL_POST_RESULT = ROOT_URL + "post_result";
 }
