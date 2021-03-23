@@ -61,17 +61,24 @@ public class ReportScoreActivity extends AppCompatActivity {
             // Identify the winner as selected by the spinner.
             int winnerID;
             int loserID;
+            int winnerElo;
+            int loserElo;
             String winner = spinnerWinner.getSelectedItem().toString();
             if (winner == userName) {
                 winnerID = user.getplayerID();
                 loserID = challenge.getOpponent().getplayerID();
+                winnerElo = user.getElo();
+                loserElo = challenge.getOpponent().getElo();
             }
             else {
                 winnerID = challenge.getOpponent().getplayerID();
                 loserID = user.getplayerID();
+                winnerElo = challenge.getOpponent().getElo();
+                loserElo = user.getElo();
             }
             // Adjust the player ratings relative to the result.
-            adjustRatings(winnerID);
+            winnerElo = getAdjustedRating(winnerElo, loserElo, true);
+            loserElo = getAdjustedRating(loserElo, winnerElo, false);
 
             // Build a string to represent the score.
             StringBuilder scoreString = new StringBuilder();
@@ -90,12 +97,25 @@ public class ReportScoreActivity extends AppCompatActivity {
                 scoreString.append(set3Score2.getText().toString());
             }
             String score = scoreString.toString();
-            postResult(challengeID, winnerID, loserID, score, 1420, 1380);
+            postResult(challengeID, winnerID, loserID, score, winnerElo, loserElo);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtras(challengeExtras);
+            startActivity(intent);
         });
     }
 
-    protected void adjustRatings(int winnerID) {
-
+    protected int getAdjustedRating(int toAdjust, int opponentElo, boolean winner) {
+        double expectedScore = 1/(1+Math.pow(10, (opponentElo-toAdjust)/400));
+        double adjustFactor = 32;
+        double result;
+        result = (winner == true) ? 1 : 0;
+        double adjustedScore = adjustFactor*(result-expectedScore);
+        return toAdjust+(int)(Math.round(adjustedScore));
     }
 
     // Post the result to the database including the new ratings as adjusted by the Elo algorithm.

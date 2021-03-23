@@ -58,14 +58,20 @@ public class LoginFragment extends Fragment {
                 JSONObject object = new JSONObject(s);
                 if (object.getString("error").equals("false")) {
                     JSONObject obj = object.getJSONObject("player");
-                    int playerID = Integer.parseInt(obj.getString("playerid"));
+                    int playerID = obj.getInt("playerid");
                     String email = obj.getString("email");
                     String contactNo = obj.getString("contactno");
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
                     String clubName = obj.getString("clubname");
-                    int elo = Integer.parseInt(obj.getString("elo"));
-                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubName, elo);
+                    int elo = obj.getInt("elo");
+                    int hotstreak = obj.getInt("hotstreak");
+                    int matchesPlayed = obj.getInt("matchesplayed");
+                    int wins = obj.getInt("wins");
+                    int losses = obj.getInt("losses");
+                    int highestElo = obj.getInt("highestelo");
+                    int clubChamp = obj.getInt("clubchamp");
+                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubName, elo, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp);
 
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     Bundle extras = new Bundle();

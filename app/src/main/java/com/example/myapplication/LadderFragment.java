@@ -27,44 +27,31 @@ import java.util.Objects;
 
 public class LadderFragment extends Fragment implements LadderAdapter.OnNoteListener {
 
-    private ArrayList<TennisUser> globalPlayers;
     private TextView txtSearch;
     private RecyclerView recyclerView;
+    private ArrayList<TennisUser> globalPlayers;
+    private ArrayList<TennisUser> players;
     private LadderAdapter ladderAdapter;
     private final LadderAdapter.OnNoteListener onNoteListener = this;
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_ladder, container, false);
-
-        getLadderData();
-        setHasOptionsMenu(true);
-        Toolbar toolbar = view.findViewById(R.id.my_toolbar);
         txtSearch = view.findViewById(R.id.txtLadderSearch);
         recyclerView = view.findViewById(R.id.ladder_recyclerview);
+
+        players = new ArrayList<>();
+        getLadderData();
+
+        setHasOptionsMenu(true);
+        Toolbar toolbar = view.findViewById(R.id.my_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         Objects.requireNonNull((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setOnMenuItemClickListener(item -> {    // Remove search tip if they are searching.
             txtSearch.setVisibility(View.INVISIBLE);
             return false;
         });
-
-        // This is hacky, but if they are flinging the recyclerview, they can't be searching! Make the text visible again.
-        recyclerView.setOnFlingListener(new RecyclerView.OnFlingListener() {
-            @Override
-            public boolean onFling(int velocityX, int velocityY) {
-                txtSearch.setVisibility(View.VISIBLE);
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-                return false;
-            }
-        });
         return view;
-    }
-
-    protected void getLadderData() {
-        LadderRequest req = new LadderRequest();
-        req.execute();
     }
 
     @Override
@@ -89,6 +76,12 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getLadderData();
+    }
+
+    @Override
     public void onNoteClick(int position) {
         TennisUser tappedPlayer = globalPlayers.get(position);
         Intent intent = new Intent(getActivity(), ProfileActivity.class);
@@ -99,44 +92,53 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         startActivity(intent);
     }
 
+    protected void getLadderData() {
+        LadderRequest req = new LadderRequest();
+        req.execute();
+    }
+
     private class LadderRequest extends AsyncTask<Void, Void, String> {
-
-        public LadderRequest() { }
-
-        @Override
-        protected void onPreExecute() { }
 
         @Override
         protected void onPostExecute(String s)
         {
-            ArrayList<TennisUser> players = new ArrayList<>();
+            parseResponse(s);
+            globalPlayers = players;
+            setupRecyclerView(players);
+        }
+
+        protected void parseResponse(String s) {
             try {
+                players.clear();
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("players");
                 for (int i = 0; i < arr.length(); ++i) {
                     JSONObject obj = arr.getJSONObject(i);
-                    int playerID = Integer.parseInt(obj.getString("playerid"));
+                    int playerID = obj.getInt("playerid");
                     String fname = obj.getString("fname");
                     String lname = obj.getString("lname");
                     String clubName = obj.getString("clubname");
-                    int elo = Integer.parseInt(obj.getString("elo"));
-                    int hotstreak = Integer.parseInt(obj.getString("hotstreak"));
-                    TennisUser player = new TennisUser(playerID, fname, lname, clubName, elo, hotstreak);
+                    int elo = obj.getInt("elo");
+                    int hotstreak = obj.getInt("hotstreak");
+                    int matchesPlayed = obj.getInt("matchesplayed");
+                    int wins = obj.getInt("wins");
+                    int losses = obj.getInt("losses");
+                    int highestElo = obj.getInt("highestelo");
+                    int clubChamp = obj.getInt("clubchamp");
+                    TennisUser player = new TennisUser(playerID, fname, lname, clubName, elo, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp);
                     players.add(player);
                 }
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
-                globalPlayers = players;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            setupRecyclerView(players);
         }
 
         protected void setupRecyclerView(ArrayList<TennisUser> players) {
-            ladderAdapter = new LadderAdapter(getActivity().getApplicationContext(), players, onNoteListener);
+            ladderAdapter = new LadderAdapter(getContext(), players, onNoteListener);
             recyclerView.setAdapter(ladderAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL));
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
 
         @Override

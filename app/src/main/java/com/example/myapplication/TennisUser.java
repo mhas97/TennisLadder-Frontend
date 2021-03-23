@@ -13,49 +13,78 @@ public class TennisUser implements Parcelable {
 
     private int playerID;
     private String email;
-    private String contactno;
+    private String contactNo;
     private String fname;
     private String lname;
     private String clubName;
     private int elo;
     private int hotstreak;
+    private int matchesPlayed;
+    private int wins;
+    private int losses;
+    private int highestElo;
+    private int clubChamp;
 
-    public TennisUser(int playerID, String fname, String lname) {
+    // App user data.
+    public TennisUser(int playerID, String email, String contactNo, String fname, String lname, String clubName, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
+        this.playerID = playerID;
+        this.email = email;
+        this.contactNo = contactNo;
+        this.fname = fname;
+        this.lname = lname;
+        this.clubName = clubName;
+        this.elo = elo;
+        this.hotstreak = hotstreak;
+        this.matchesPlayed = matchesPlayed;
+        this.wins = wins;
+        this.losses = losses;
+        this.highestElo = highestElo;
+        this.clubChamp = clubChamp;
+    }
+
+    // Challenges data, required for reporting a result.
+    public TennisUser(int playerID, String fname, String lname, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
+        this.elo = elo;
+        this.hotstreak = hotstreak;
+        this.matchesPlayed = matchesPlayed;
+        this.wins = wins;
+        this.losses = losses;
+        this.highestElo = highestElo;
+        this.clubChamp = clubChamp;
     }
 
-    // For fetching and displaying ladder and profile data.
-    public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak) {
+    // Ladder and profile data, required for challenging.
+    public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
         this.clubName = clubName;
         this.elo = elo;
         this.hotstreak = hotstreak;
+        this.matchesPlayed = matchesPlayed;
+        this.wins = wins;
+        this.losses = losses;
+        this.highestElo = highestElo;
+        this.clubChamp = clubChamp;
     }
 
-    // For storing a users info upon signing in.
-    public TennisUser(int playerID, String email, String contactno, String fname, String lname, String clubName, int elo) {
-        this.playerID = playerID;
-        this.email = email;
-        this.contactno = contactno;
-        this.fname = fname;
-        this.lname = lname;
-        this.clubName = clubName;
-        this.elo = elo;
-    }
-
-    // User data for parceling.
     protected TennisUser(Parcel in) {
         playerID = in.readInt();
         email = in.readString();
-        contactno = in.readString();
+        contactNo = in.readString();
         fname = in.readString();
         lname = in.readString();
         clubName = in.readString();
         elo = in.readInt();
+        hotstreak = in.readInt();
+        matchesPlayed = in.readInt();
+        wins = in.readInt();
+        losses = in.readInt();
+        highestElo = in.readInt();
+        clubChamp = in.readInt();
     }
 
     public int getplayerID() { return playerID; }
@@ -64,8 +93,8 @@ public class TennisUser implements Parcelable {
         return email;
     }
 
-    public String getContactno() {
-        return contactno;
+    public String getContactNo() {
+        return contactNo;
     }
 
     public String getFname() {
@@ -85,6 +114,16 @@ public class TennisUser implements Parcelable {
     }
 
     public int getHotstreak() { return hotstreak; }
+
+    public int getMatchesPlayed() { return matchesPlayed; }
+
+    public int getWins() { return wins; }
+
+    public int getLosses() { return losses; }
+
+    public int getHighestElo() { return highestElo; }
+
+    public int getClubChamp() { return clubChamp; }
 
     public static final Creator<TennisUser> CREATOR = new Creator<TennisUser>() {
         @Override
@@ -107,10 +146,16 @@ public class TennisUser implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(playerID);
         dest.writeString(email);
-        dest.writeString(contactno);
+        dest.writeString(contactNo);
         dest.writeString(fname);
         dest.writeString(lname);
         dest.writeString(clubName);
         dest.writeInt(elo);
+        dest.writeInt(hotstreak);
+        dest.writeInt(matchesPlayed);
+        dest.writeInt(wins);
+        dest.writeInt(losses);
+        dest.writeInt(highestElo);
+        dest.writeInt(clubChamp);
     }
 }

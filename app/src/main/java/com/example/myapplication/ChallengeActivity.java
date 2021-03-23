@@ -79,13 +79,13 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
             int userID = user.getplayerID();
             int opponentID = opponent.getplayerID();
             String location = spinnerChallengeClub.getSelectedItem().toString();
-            // In the end it was more elegant to send the API UNIX time and convert there for db storage.
+            // In the end it was more elegant to send the API a UNIX time and convert there for db storage.
             // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = String.valueOf(date_seconds);
             // Create the challenge.
             createChallenge(location, date, time, userID, opponentID);
             try {
-                Thread.sleep(100);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

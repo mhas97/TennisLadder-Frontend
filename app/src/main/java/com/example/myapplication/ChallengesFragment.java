@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ChallengesFragment extends Fragment implements ChallengesAdapter.OnNoteListener {
 
@@ -76,18 +76,29 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
                 JSONArray arr = object.getJSONArray("challenges");
                 for (int i = 0; i < arr.length(); ++i) {
                     JSONObject obj = arr.getJSONObject(i);
-                    int challengeID = Integer.parseInt(obj.getString("challengeid"));
-                    int opponentID = Integer.parseInt(obj.getString("opponentid"));
-                    String opponentFname = obj.getString("fname");
-                    String opponentLname = obj.getString("lname");
+                    int challengeID = obj.getInt("challengeid");
+                    int oppID = obj.getInt("opponentid");
+                    String oppFname = obj.getString("fname");
+                    String oppLname = obj.getString("lname");
+                    int oppElo = obj.getInt("elo");
+                    int oppHotstreak = obj.getInt("hotstreak");
+                    int oppMatchesPlayed = obj.getInt("matchesplayed");
+                    int oppWins = obj.getInt("wins");
+                    int oppLosses = obj.getInt("losses");
+                    int oppHighestElo = obj.getInt("highestelo");
+                    int oppClubChamp = obj.getInt("clubchamp");
                     String date = obj.getString("date");
                     String time = obj.getString("time");
                     String location = obj.getString("location");
-                    int didInitiate = Integer.parseInt(obj.getString("didinitiate"));
-                    int accepted = Integer.parseInt(obj.getString("accepted"));
-                    TennisChallenge challenge = new TennisChallenge(challengeID, new TennisUser(opponentID, opponentFname, opponentLname), date, time, location, didInitiate, accepted);
+                    int didInitiate = obj.getInt("didinitiate");
+                    int accepted = obj.getInt("accepted");
+                    TennisChallenge challenge = new TennisChallenge(challengeID,
+                            new TennisUser(oppID, oppFname, oppLname, oppElo, oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo, oppClubChamp),
+                            date, time, location, didInitiate, accepted);
                     challenges.add(challenge);
                 }
+                // Reverse the order so the latest challenge displays first
+                Collections.reverse(challenges);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

@@ -6,7 +6,7 @@ public class API_URL {
     private static final String ROOT_URL = "http://192.168.1.11/Android/v3/tennisapi.php?tennisapi=";
     public static final String URL_LOGIN = ROOT_URL + "login";
     public static final String URL_CREATE_PLAYER = ROOT_URL + "create_player";
-    public static final String URL_GET_LADDER_DATA = ROOT_URL + "get_ladder_data";
+    public static final String URL_GET_LADDER_DATA = ROOT_URL + "get_ladder_profile_data";
     public static final String URL_CREATE_CHALLENGE = ROOT_URL + "create_challenge";
     public static final String URL_CREATE_PLAYER_CHALLENGE = ROOT_URL + "create_player_challenge";
     public static final String URL_GET_CHALLENGES = ROOT_URL + "get_challenges&playerid=";

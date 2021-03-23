@@ -22,7 +22,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     public LadderAdapter(Context context, ArrayList<TennisUser> p, OnNoteListener onNoteListener) {
         this.p = p;
         // Make a copy so they aren't pointing at the same list.
-        this.completeP = new ArrayList<TennisUser>(p);
+        this.completeP = new ArrayList<>(p);
         this.context = context;
         this.onNoteListener = onNoteListener;
     }
