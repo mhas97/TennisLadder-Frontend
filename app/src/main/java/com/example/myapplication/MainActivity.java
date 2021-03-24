@@ -1,17 +1,15 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import com.google.android.material.tabs.TabLayout;
-
 import org.jetbrains.annotations.NotNull;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,38 +21,65 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // In order to track the logged in user, send some important info from the login procedure.
-        // This is passed and retrieved using intents, in this case my player class implements the
-        // Parcelable interface, allowing objects to be passed between activities.
+        // Fetch user data from the bundle.
         Intent mainIntent = getIntent();
         Bundle mainExtras = mainIntent.getExtras();
         user = mainExtras.getParcelable("user");
 
+        // Identify and create both tab layout and view pager.
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
 
+        // Connect the view pager and tab layout so the highlighted tab corresponds to the correct fragment.
+        tabLayout.setupWithViewPager(viewPager);
+
+        // Create a tab for the 3 primary fragments.
         tabLayout.addTab(tabLayout.newTab().setText("Challenges"));
         tabLayout.addTab(tabLayout.newTab().setText("Ladder"));
         tabLayout.addTab(tabLayout.newTab().setText("Profile"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        tabLayout.setupWithViewPager(viewPager);
 
+        // Create an adapter and attach it to the identified view pager.
         MainAdapter mainAdapter= new MainAdapter(getSupportFragmentManager(), getApplicationContext(), 3);
         viewPager.setAdapter(mainAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     }
 
+    /**
+     * To ensure that forms aren't re-entered, the back button acts
+     * as a logout button.
+     */
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        // Create a dialog to check if the user wants to logout
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setCancelable(true);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout?");
+        builder.setPositiveButton("Yes", (dialog, which) -> {
+            // Navigate to the login screen
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        });
+        // Cancel
+        builder.setNegativeButton("No", (dialog, which) -> {
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
+    /**
+     * Fragments make use of this function to acquire data about the app user.
+     * @return user object
+     */
     public static TennisUser getUser() {
         return user;
     }
 
+    /**
+     * An adapter to handle the switching between fragments. This includes
+     * returning the corresponding view, as well as the correct tab names.
+     */
     private static class MainAdapter extends FragmentPagerAdapter {
 
         private final int numTabs;
@@ -75,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
                 case 2:
                     return new ProfileFragment();
             }
-            return null;
+            // In the case of an error, return the challenges fragment.
+            return new ChallengesFragment();
         }
 
         @Override

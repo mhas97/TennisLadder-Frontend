@@ -10,18 +10,23 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
+/**
+ * Handles the recycler view holder by populating it with a card view for each
+ * challenge.
+ */
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder> {
 
-    private final ArrayList<TennisChallenge> c;
+    private final ArrayList<TennisChallenge> challenges;
     private final Context context;
     private final OnNoteListener onNoteListener;
 
     public ChallengesAdapter(Context context, ArrayList<TennisChallenge> challenges, OnNoteListener onNoteListener) {
         this.context = context;
-        this.c = challenges;
+        this.challenges = challenges;
         this.onNoteListener = onNoteListener;
     }
 
+    //Inflate the challenges_row layout for each challenge.
     @NonNull
     @Override
     public ChallengeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -30,41 +35,54 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
         return new ChallengeViewHolder(view, onNoteListener);
     }
 
+    // For each challenge view holder, modify it's contents relative to its associated data.
     @Override
     public void onBindViewHolder(@NonNull ChallengeViewHolder holder, int position) {
-        if (c.get(position).getAccepted() == 1) {
-            holder.status.setText("It's On!");
+        // Accepted challenge.
+        if (challenges.get(position).getAccepted() == 1) {
+            holder.txtStatus.setText("It's On!");
         }
-        else if (c.get(position).getDidInitiate() == 0) {    // -1 flag indicates a match has not yet been played.
-            holder.status.setText("Incoming Challenge");
+        // Initiated challenge.
+        else if (challenges.get(position).getDidInitiate() == 0) {    // -1 flag indicates a match has not yet been played.
+            holder.txtStatus.setText("Incoming Challenge");
         }
+        // Recieved challenge.
         else {
-            holder.status.setText("Outgoing Challenge");
+            holder.txtStatus.setText("Outgoing Challenge");
         }
-        String opponentName = c.get(position).getOpponent().getFname() + " " + c.get(position).getOpponent().getLname();
-        holder.opponent.setText(opponentName);
+        // Display opponent data.
+        String opponentName = challenges.get(position).getOpponent().getFname() + " " + challenges.get(position).getOpponent().getLname();
+        holder.txtOpponent.setText(opponentName);
     }
 
     @Override
     public int getItemCount() {
-        return c.size();
+        return challenges.size();
     }
 
+    /**
+     * Each challenge is contained within a view holder, containing data
+     * as well as an on-note listener.
+     */
     public static class ChallengeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final CardView cvResult;
-        private final TextView status, opponent;
+        private final TextView txtStatus, txtOpponent;
         private final OnNoteListener onNoteListener;
 
         public ChallengeViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
-            cvResult = itemView.findViewById(R.id.cvMatch);
-            status = itemView.findViewById(R.id.txtMatchStatus);
-            opponent = itemView.findViewById(R.id.txtMatchOpponent);
+            // Identify elements
+            txtStatus = itemView.findViewById(R.id.txtMatchStatus);
+            txtOpponent = itemView.findViewById(R.id.txtMatchOpponent);
+
+            // Assign an on-note listener
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Get the the position of the tap.
+         */
         @Override
         public void onClick(View v) {
             onNoteListener.onNoteClick(getAdapterPosition());

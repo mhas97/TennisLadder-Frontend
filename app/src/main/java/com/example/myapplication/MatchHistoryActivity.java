@@ -34,7 +34,7 @@ public class MatchHistoryActivity extends AppCompatActivity {
     }
 
     protected void setUpRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.matches_recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewChallenges);
         matchesAdapter = new MatchesAdapter(matches, this);
         recyclerView.setAdapter(matchesAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

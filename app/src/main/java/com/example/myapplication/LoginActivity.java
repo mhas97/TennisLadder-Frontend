@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
-import android.content.Context;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
-
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Behaves as a fragment manager for both the login and signup activities.
+ * An adapter instance is created to handle fragment switching and interaction.
+ */
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -18,24 +20,34 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Identify tab layout and view pager elements, this allows for fragments to be switched upon user request.
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
 
+        // Create a tab for both login and signup fragments.
         tabLayout.addTab(tabLayout.newTab().setText("Login"));
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        // Connect the view pager and tab layout so the highlighted tab corresponds to the correct fragment.
         tabLayout.setupWithViewPager(viewPager);
 
-        LoginSignupAdapter loginSignupAdapter = new LoginSignupAdapter(getSupportFragmentManager(), getApplicationContext(), 2);
+        // Create an adapter and attach it to the identified view pager.
+        LoginSignupAdapter loginSignupAdapter = new LoginSignupAdapter(getSupportFragmentManager(), 2);
         viewPager.setAdapter(loginSignupAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     }
 
+    /**
+     * An adapter to handle the switching between fragments. This includes
+     * returning the corresponding view, as well as the correct tab names.
+     */
     private static class LoginSignupAdapter extends FragmentPagerAdapter {
 
         private final int numTabs;
 
-        public LoginSignupAdapter(FragmentManager fm, Context context, int numTabs) {
+        public LoginSignupAdapter(FragmentManager fm, int numTabs) {
             super(fm);
             this.numTabs = numTabs;
         }
@@ -49,7 +61,8 @@ public class LoginActivity extends AppCompatActivity {
                 case 1:
                     return new SignupFragment();
             }
-            return null;
+            // In the case of an error, return the login fragment.
+            return new LoginFragment();
         }
 
         @Override

@@ -24,40 +24,56 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
+/**
+ * A fragment to display ladder information for a user. An adapter interface
+ * is used to handle recycler view population and searching. An on-note listener
+ * is used handle others players being tapped by the user. A recycler view is a dynamic
+ * list which is ideal for displaying large sets of data. As such this is the primary
+ * view holder used throughout this project.
+ * (https://developer.android.com/guide/topics/ui/layout/recyclerview)
+ */
 public class LadderFragment extends Fragment implements LadderAdapter.OnNoteListener {
 
     private TextView txtSearch;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerLadder;
+
+    // 2 array lists are required to handle ladder filtering.
     private ArrayList<TennisUser> globalPlayers;
     private ArrayList<TennisUser> players;
+
     private LadderAdapter ladderAdapter;
     private final LadderAdapter.OnNoteListener onNoteListener = this;
 
+    /**
+     * Identify and set up the recycler view and toolbar. Make a network request
+     * to fetch ladder data.
+     */
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_ladder, container, false);
+
+        // Identify page elements.
         txtSearch = view.findViewById(R.id.txtLadderSearch);
-        recyclerView = view.findViewById(R.id.ladder_recyclerview);
+        recyclerLadder = view.findViewById(R.id.recyclerViewLadder);
 
         players = new ArrayList<>();
         getLadderData();
+        setupToolbar(view);
 
-        setHasOptionsMenu(true);
-        Toolbar toolbar = view.findViewById(R.id.my_toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        Objects.requireNonNull((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
-        toolbar.setOnMenuItemClickListener(item -> {    // Remove search tip if they are searching.
-            txtSearch.setVisibility(View.INVISIBLE);
-            return false;
-        });
         return view;
     }
 
+    /**
+     * Create the ladder menu display. An on-query listener is created
+     * to handle user queries via the ladder adapter.
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        // Inflate the ladder menu for display.
         menuInflater.inflate(R.menu.ladder_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.ladder_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+        // Set the on query listener.
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override
@@ -65,24 +81,64 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
                 return false;
             }
 
+            //Handle text changes in the search box.
             @Override
             public boolean onQueryTextChange(String newText) {
+                // Remove the text hint when the search box is active
                 txtSearch.setVisibility(View.INVISIBLE);
+                // Pass the text to the ladder adapter
                 ladderAdapter.getFilter().filter(newText);
                 return false;
             }
         });
     }
 
+    /**
+     * Upon resuming the fragment, execute a network request to check
+     * for any ladder updates.
+     */
     @Override
     public void onResume() {
         super.onResume();
         getLadderData();
     }
 
+    /**
+     * Create an object to perform an asynchronous network request to fetch
+     * ladder data.
+     */
+    protected void getLadderData() {
+        LadderRequest req = new LadderRequest();
+        req.execute();
+    }
+
+    //Setup the toolbar for user queries.
+    protected void setupToolbar(View view) {
+        setHasOptionsMenu(true);
+        // The toolbar acts as the action bar (at the top of the screen) in this case.
+        Toolbar toolbar = view.findViewById(R.id.my_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+        // Disable the app title.
+        Objects.requireNonNull((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        // Remove search tip if they are searching.
+        toolbar.setOnMenuItemClickListener(item -> {
+            txtSearch.setVisibility(View.INVISIBLE);
+            return false;
+        });
+    }
+
+    /**
+     * An on-note listener is implemented to handle ladder taps.
+     * Corresponding user data is bundled and passed to the profile
+     * page.
+     * @param position the position of the note tapped.
+     */
     @Override
     public void onNoteClick(int position) {
         TennisUser tappedPlayer = globalPlayers.get(position);
+        // You can't challenge yourself!
         if (tappedPlayer.getplayerID() != MainActivity.getUser().getplayerID()) {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
             Bundle extras = new Bundle();
@@ -93,11 +149,10 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         }
     }
 
-    protected void getLadderData() {
-        LadderRequest req = new LadderRequest();
-        req.execute();
-    }
-
+    /**
+     * An asynchronous task to handle ladder requests. Also handles the
+     * setting up of the recycler view adapter.
+     */
     private class LadderRequest extends AsyncTask<Void, Void, String> {
 
         @Override
@@ -108,6 +163,7 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
             setupRecyclerView(players);
         }
 
+        // Parse the JSON string into player objects.
         protected void parseResponse(String s) {
             try {
                 players.clear();
@@ -129,17 +185,19 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
                     TennisUser player = new TennisUser(playerID, fname, lname, clubName, elo, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp);
                     players.add(player);
                 }
+                // Order the list by Elo.
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
+        //Setup the adapter for the recycler view.
         protected void setupRecyclerView(ArrayList<TennisUser> players) {
             ladderAdapter = new LadderAdapter(getContext(), players, onNoteListener);
-            recyclerView.setAdapter(ladderAdapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+            recyclerLadder.setAdapter(ladderAdapter);
+            recyclerLadder.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerLadder.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
 
         @Override

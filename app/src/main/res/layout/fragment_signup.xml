@@ -14,28 +14,29 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="Signup"
         android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/txtEditEmailSignup"
+        android:id="@+id/txtEmailSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="24dp"
-        android:padding="10dp"
-        android:fontFamily="sans-serif-smallcaps"
         android:background="@drawable/rounded_edge"
-        android:hint="email"
+        android:fontFamily="sans-serif-smallcaps"
+        android:hint="Username"
         android:inputType="none"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSignupTitle" />
 
     <EditText
-        android:id="@+id/txtEditPasswordSignup"
+        android:id="@+id/txtPasswordSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -43,15 +44,15 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
-        android:hint="password"
+        android:hint="Password"
         android:inputType="none"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditEmailSignup" />
+        app:layout_constraintTop_toBottomOf="@+id/txtEmailSignup" />
 
     <EditText
-        android:id="@+id/txtEditContactNo"
+        android:id="@+id/txtContactNoSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -59,15 +60,15 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
-        android:hint="01253500600"
+        android:hint="Tel"
         android:inputType="none"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditPasswordSignup" />
+        app:layout_constraintTop_toBottomOf="@+id/txtPasswordSignup" />
 
     <EditText
-        android:id="@+id/txtEditFname"
+        android:id="@+id/txtFnameSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -75,15 +76,15 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
-        android:hint="david"
+        android:hint="First Name"
         android:inputType="none"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditContactNo" />
+        app:layout_constraintTop_toBottomOf="@+id/txtContactNoSignup" />
 
     <EditText
-        android:id="@+id/txtEditLname"
+        android:id="@+id/txtLnameSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -91,15 +92,15 @@
         android:layout_marginEnd="24dp"
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
-        android:hint="johnson"
+        android:hint="Last Name"
         android:inputType="none"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditFname" />
+        app:layout_constraintTop_toBottomOf="@+id/txtFnameSignup" />
 
     <Spinner
-        android:id="@+id/spinnerClub"
+        android:id="@+id/spinnerClubSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -108,23 +109,25 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEditLname" />
+        app:layout_constraintTop_toBottomOf="@+id/txtLnameSignup" />
 
     <Button
         android:id="@+id/btnSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
-        android:padding="10dp"
-        android:fontFamily="sans-serif-smallcaps"
         android:background="@drawable/rounded_edge"
+        android:fontFamily="sans-serif-smallcaps"
+        android:padding="10dp"
         android:text="Signup"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerClub"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerClubSignup"
         app:layout_constraintVertical_bias="0.15" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

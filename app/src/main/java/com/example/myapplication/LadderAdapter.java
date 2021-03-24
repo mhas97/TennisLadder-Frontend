@@ -12,21 +12,31 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
+/**
+ * An adapter to handle the ladder recycler view. This includes updating its
+ * contents to account for both network requests and user queries via the search bar.
+ */
 public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderViewHolder> implements Filterable {
 
-    private final ArrayList<TennisUser> p;
-    private final ArrayList<TennisUser> completeP;
+    // 2 lists are required for filtering via queries.
+    private final ArrayList<TennisUser> players;
+    private final ArrayList<TennisUser> completePlayers;
+
     private final Context context;
     private final OnNoteListener onNoteListener;
 
-    public LadderAdapter(Context context, ArrayList<TennisUser> p, OnNoteListener onNoteListener) {
-        this.p = p;
+    public LadderAdapter(Context context, ArrayList<TennisUser> players, OnNoteListener onNoteListener) {
+        this.players = players;
         // Make a copy so they aren't pointing at the same list.
-        this.completeP = new ArrayList<>(p);
+        this.completePlayers = new ArrayList<>(players);
         this.context = context;
         this.onNoteListener = onNoteListener;
     }
 
+
+    /**
+     * Inflate the ladder_row view layout for each player on the ladder.
+     */
     @NonNull
     @Override
     public LadderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,23 +45,28 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         return new LadderViewHolder(view, onNoteListener);
     }
 
+    /**
+     * For each player view holder, modify the view contents relative to the associated data.
+     * @param holder The view holder for each player.
+     * @param position Its position within the recycler view.
+     */
     @Override
     public void onBindViewHolder(@NonNull LadderViewHolder holder, int position) {
-        holder.rank.setText(String.valueOf(position + 1));
-        holder.fname.setText(p.get(position).getFname());
-        holder.lname.setText(p.get(position).getLname());
-        if (p.get(position).getHotstreak() == 1)
+        holder.txtRank.setText(String.valueOf(position + 1));
+        holder.txtFname.setText(players.get(position).getFname());
+        holder.txtLname.setText(players.get(position).getLname());
+        if (players.get(position).getHotstreak() == 1)
         {
-            holder.hotstreak.setImageResource(R.drawable.hot_streak);
+            holder.imgHotstreak.setImageResource(R.drawable.hot_streak);
         } else {
-            holder.hotstreak.setImageResource(0);
+            holder.imgHotstreak.setImageResource(0);
         }
-        holder.elo.setText(String.valueOf(p.get(position).getElo()));
+        holder.txtElo.setText(String.valueOf(players.get(position).getElo()));
     }
 
     @Override
     public int getItemCount() {
-        return p.size();
+        return players.size();
     }
 
     @Override
@@ -60,61 +75,78 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     }
 
     /**
-     * Filter class performs filtering on the background thread, won't freeze the app.
-     * Automatically published to UI thread.
+     * The asynchronous filter class performs filtering on a background thread so won't
+     * freeze the app. It's results are automatically published to UI thread.
      */
     private final Filter ladderFilter = new Filter() {
 
         /**
          * Pass a filter over the complete list to search for players in the ladder.
-         * If the constraint is invalid or empty, add all users.
-         * Else, filter each player in the ladder via the constraint and append
-         * any matches to the filtered list.
+         * If the constraint is invalid or empty, add all users, else filter each
+         * player in the ladder using the constraint and append any matches to the
+         * filtered list.
+         * @param constraint The user query.
          */
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             ArrayList<TennisUser> filtered = new ArrayList<>();
+            // Null or empty constraints.
             if (constraint == null || constraint.length() == 0) {
-                filtered.addAll(completeP);
-            } else {
-                String filterSequence = constraint.toString().toLowerCase().trim(); // Concatenate the full name.
-                for (TennisUser t : completeP) {
+                filtered.addAll(completePlayers);
+            }
+            else {
+                String filterSequence = constraint.toString().toLowerCase().trim();
+                for (TennisUser t : completePlayers) {
                     String fullName = t.getFname() + " " + t.getLname();
+                    // If the users full name contains the constraint, add it to the filtered list.
                     if (fullName.toLowerCase().contains(filterSequence)) {
                         filtered.add(t);
                     }
                 }
             }
+            // Return the filtered list.
             FilterResults results = new FilterResults();
             results.values = filtered;
             return results;
         }
 
+        /**
+         * Publish the results by clearing and updating the data set before notifying the adapter.
+         * @param constraint The user query.
+         * @param results The resulting list.
+         */
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            p.clear();
-            p.addAll((ArrayList) results.values);
+            players.clear();
+            players.addAll((ArrayList) results.values);
             notifyDataSetChanged();
         }
     };
 
+    /**
+     * Each player is contained within a view holder, containing data
+     * as well as an on-note listener.
+     */
     public static class LadderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final TextView rank, fname, lname, elo;
-        private final ImageView hotstreak;
+        private final TextView txtRank, txtFname, txtLname, txtElo;
+        private final ImageView imgHotstreak;
         private final OnNoteListener onNoteListener;
 
         public LadderViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
-            rank = itemView.findViewById(R.id.rank_text);
-            fname = itemView.findViewById(R.id.fname_text);
-            lname = itemView.findViewById(R.id.lname_text);
-            hotstreak = itemView.findViewById(R.id.img_hotstreak);
-            elo = itemView.findViewById(R.id.elo_text);
+            txtRank = itemView.findViewById(R.id.txtRank);
+            txtFname = itemView.findViewById(R.id.txtFname);
+            txtLname = itemView.findViewById(R.id.txtLname);
+            imgHotstreak = itemView.findViewById(R.id.imgHotstreak);
+            txtElo = itemView.findViewById(R.id.txtElo);
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Get the the position of the tap.
+         */
         @Override
         public void onClick(View v) {
             onNoteListener.onNoteClick(getAdapterPosition());

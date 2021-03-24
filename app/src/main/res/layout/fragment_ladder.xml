@@ -40,7 +40,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ladder_recyclerview"
+        android:id="@+id/recyclerViewLadder"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_marginTop="32dp"

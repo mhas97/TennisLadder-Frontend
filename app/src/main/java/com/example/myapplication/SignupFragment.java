@@ -25,12 +25,16 @@ public class SignupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = (ViewGroup) layoutInflater.inflate(R.layout.fragment_signup, container, false);
-        txtEmail = view.findViewById(R.id.txtEditEmailSignup);
-        txtPassword = view.findViewById(R.id.txtEditPasswordSignup);
-        txtContactNo = view.findViewById(R.id.txtEditContactNo);
-        txtFname = view.findViewById(R.id.txtEditFname);
-        txtLname = view.findViewById(R.id.txtEditLname);
-        spinnerClub = view.findViewById(R.id.spinnerClub);
+
+        // Identify page elements.
+        txtEmail = view.findViewById(R.id.txtEmailSignup);
+        txtPassword = view.findViewById(R.id.txtPasswordSignup);
+        txtContactNo = view.findViewById(R.id.txtContactNoSignup);
+        txtFname = view.findViewById(R.id.txtFnameSignup);
+        txtLname = view.findViewById(R.id.txtLnameSignup);
+        spinnerClub = view.findViewById(R.id.spinnerClubSignup);
+
+        // Attempt to signup upon button press.
         Button btnSignup = view.findViewById(R.id.btnSignup);
         getClubList();
         btnSignup.setOnClickListener(v -> {
@@ -39,11 +43,18 @@ public class SignupFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Create a club request to execute asynchronously. This fetches
+     * a list of valid clubs from the database ensuring challenge integrity.
+     */
     protected void getClubList() {
-        clubRequest clubRequest = new clubRequest();
-        clubRequest.execute();
+        clubRequest req = new clubRequest();
+        req.execute();
     }
 
+    /**
+     * Obtain user information to create a signup request.
+     */
     protected void createUser() {
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
@@ -51,6 +62,8 @@ public class SignupFragment extends Fragment {
         String fname = txtFname.getText().toString().trim();
         String lname = txtLname.getText().toString().trim();
         String clubname = spinnerClub.getSelectedItem().toString().trim();
+
+        // Create a parameter hashmap to send to the API.
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
@@ -58,28 +71,50 @@ public class SignupFragment extends Fragment {
         params.put("fname", fname);
         params.put("lname", lname);
         params.put("clubname", clubname);
-        SignupRequest signupRequest = new SignupRequest(params);
-        signupRequest.execute();
+
+        // Create a signup request object to execute asynchronously.
+        SignupRequest req = new SignupRequest(params);
+        req.execute();
     }
 
+    /**
+     * An asynchronous task that fetches valid clubs for selection.
+     */
     private class clubRequest extends AsyncTask<Void, Void, String> {
+
+        ArrayList<String> clubList;
 
         @Override
         protected void onPostExecute(String s) {
+            parseClubs(s);
+            attachAdapter(clubList);
+        }
+
+        protected ArrayList<String> parseClubs(String s) {
             try {
+                // Parse returned club names.
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("clubs");
-                ArrayList<String> clubs = new ArrayList<>();
+
+                // Use this data to create an array list for an adapter.
+                clubList = new ArrayList<>();
                 for (int i = 0; i < arr.length(); ++i) {
-                    clubs.add(arr.getString(i));
+                    clubList.add(arr.getString(i));
                 }
-                ArrayAdapter<String> clubAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, clubs);
-                spinnerClub.setAdapter(clubAdapter);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            return null;
         }
 
+        protected void attachAdapter(ArrayList<String> clubs) {
+            ArrayAdapter<String> clubAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, clubs);
+            spinnerClub.setAdapter(clubAdapter);
+        }
+
+        /**
+         * Create a request handler object to handle HTTP communication with the API.
+         */
         @Override
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
@@ -87,6 +122,9 @@ public class SignupFragment extends Fragment {
         }
     }
 
+    /**
+     * An asynchronous task that processes a signup request.
+     */
     private class SignupRequest extends AsyncTask<Void, Void, String> {
 
         HashMap<String, String> params;
@@ -96,18 +134,19 @@ public class SignupFragment extends Fragment {
         }
 
         @Override
-        protected void onPreExecute() { }
-
-        @Override
         protected void onPostExecute(String s) {
             try {
                 JSONObject object = new JSONObject(s);
-                Toast.makeText(getActivity().getApplicationContext(), object.getString("message"), Toast.LENGTH_LONG).show();
+                // Display success status.
+                Toast.makeText(getContext(), object.getString("message"), Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
+        /**
+         * Create a request handler object to handle HTTP communication with the API.
+         */
         @Override
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();

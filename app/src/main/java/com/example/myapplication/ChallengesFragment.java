@@ -16,20 +16,72 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * A fragment to display challenge information for a user. An adapter interface
+ * is used to handle recycler view population, as well as an on-note listener to
+ * handle individual challenges being tapped by the user. A recycler view is a dynamic
+ * list which is ideal for displaying large sets of data. As such this is the primary
+ * view holder used throughout this project.
+ * (https://developer.android.com/guide/topics/ui/layout/recyclerview)
+ */
 public class ChallengesFragment extends Fragment implements ChallengesAdapter.OnNoteListener {
 
     private ArrayList<TennisChallenge> challenges;
     private ChallengesAdapter challengesAdapter;
     private final ChallengesAdapter.OnNoteListener onNoteListener = this;
 
+    /**
+     * Identify and set up the recycler view, and make a network request
+     * to fetch challenge data.
+     */
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_challenges, container, false);
+
         challenges = new ArrayList<>();
         setUpRecyclerView(view);
         getChallenges();
         return view;
     }
 
+    /**
+     * Upon resuming the fragment, execute a network request to check
+     * for any new challenges.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        getChallenges();
+    }
+
+    /**
+     * Identify the recycler view element. An adapter is then created
+     * holding a reference to the challenges list. This list is populated
+     * upon completion of the network request.
+     */
+    protected void setUpRecyclerView(View view) {
+        RecyclerView recyclerChallenges = view.findViewById(R.id.recyclerViewChallenges);
+        challengesAdapter = new ChallengesAdapter(getActivity(), challenges, onNoteListener);
+        recyclerChallenges.setAdapter(challengesAdapter);
+        recyclerChallenges.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerChallenges.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+    }
+
+    /**
+     * Create an object to perform an asynchronous network request to fetch
+     * user challenges.
+     */
+    protected void getChallenges() {
+        ChallengesRequest req = new ChallengesRequest();
+        req.execute();
+    }
+
+    /**
+     * An on-note listener is implemented to handle challenge taps. A note
+     * refers to an object in the recycler view. When a note (a challenge)
+     * is tapped, corresponding data is bundled an passed to the challenge viewer
+     * activity.
+     * @param position the position of the note tapped.
+     */
     @Override
     public void onNoteClick(int position) {
         TennisChallenge tappedChallenge = challenges.get(position);
@@ -41,37 +93,28 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
         startActivity(intent);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getChallenges();
-    }
-
-    protected void setUpRecyclerView(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.matches_recyclerview);
-        challengesAdapter = new ChallengesAdapter(getActivity(), challenges, onNoteListener);
-        recyclerView.setAdapter(challengesAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
-    }
-
-    protected void getChallenges() {
-        ChallengesRequest req = new ChallengesRequest();
-        req.execute();
-    }
-
+    /**
+     * An asynchronous task used to fetch challenge data for the given user.
+     */
     private class ChallengesRequest extends AsyncTask<Void, Void, String> {
 
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             parseResponse(s);
+            // Notify the adapter that the data set has been altered by the network requeest.
             challengesAdapter.notifyDataSetChanged();
         }
 
+        /**
+         * Parses challenge data and creates an array list of challenges.
+         * When this process is finished, the adapter is notified that the
+         * data set has been modified.
+         * @param s challenge data JSON string
+         */
         protected void parseResponse(String s) {
             try {
-                challenges.clear();
+                challenges.clear(); // Clear the dataset to ensure up to date information is displayed between fragment switches.
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("challenges");
                 for (int i = 0; i < arr.length(); ++i) {
@@ -93,9 +136,12 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
                     String location = obj.getString("location");
                     int didInitiate = obj.getInt("didinitiate");
                     int accepted = obj.getInt("accepted");
+
+                    // The resulting challenge object.
                     TennisChallenge challenge = new TennisChallenge(challengeID,
-                            new TennisUser(oppID, oppFname, oppLname, oppElo, oppWinstreak, oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo, oppClubChamp),
-                            date, time, location, didInitiate, accepted);
+                            new TennisUser(oppID, oppFname, oppLname, oppElo, oppWinstreak,
+                                    oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo,
+                                    oppClubChamp), date, time, location, didInitiate, accepted);
                     challenges.add(challenge);
                 }
                 // Reverse the order so the latest challenge displays first
@@ -105,10 +151,11 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
             }
         }
 
+        // A request handler object to handle HTTP communication with the API.
         @Override
         protected String doInBackground(Void... voids) {
-            RequestHandler requestHandler = new RequestHandler();
-            return requestHandler.sendGetRequest(API_URL.URL_GET_CHALLENGES + MainActivity.getUser().getplayerID());
+            RequestHandler req = new RequestHandler();
+            return req.sendGetRequest(API_URL.URL_GET_CHALLENGES + MainActivity.getUser().getplayerID());
         }
     }
 }

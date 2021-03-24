@@ -17,7 +17,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/rank_text"
+                android:id="@+id/txtRank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -31,7 +31,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/fname_text"
+                android:id="@+id/txtFname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
@@ -40,11 +40,11 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:text="Fname"
                 android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/rank_text"
+                app:layout_constraintStart_toEndOf="@+id/txtRank"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/lname_text"
+                android:id="@+id/txtLname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
@@ -53,11 +53,11 @@
                 android:text="Lname"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@+id/rank_text"
-                app:layout_constraintTop_toBottomOf="@+id/fname_text" />
+                app:layout_constraintStart_toEndOf="@+id/txtRank"
+                app:layout_constraintTop_toBottomOf="@+id/txtFname" />
 
             <TextView
-                android:id="@+id/elo_text"
+                android:id="@+id/txtElo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="40dp"
@@ -71,15 +71,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/img_hotstreak"
+                android:id="@+id/imgHotstreak"
                 android:layout_width="20dp"
                 android:layout_height="22dp"
                 android:layout_marginStart="2dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
-                app:layout_constraintBottom_toTopOf="@+id/lname_text"
-                app:layout_constraintStart_toEndOf="@+id/fname_text"
+                app:layout_constraintBottom_toTopOf="@+id/txtLname"
+                app:layout_constraintStart_toEndOf="@+id/txtFname"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
 
