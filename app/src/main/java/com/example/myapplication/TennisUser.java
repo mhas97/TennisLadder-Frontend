@@ -18,6 +18,7 @@ public class TennisUser implements Parcelable {
     private String lname;
     private String clubName;
     private int elo;
+    private int winstreak;
     private int hotstreak;
     private int matchesPlayed;
     private int wins;
@@ -26,7 +27,7 @@ public class TennisUser implements Parcelable {
     private int clubChamp;
 
     // App user data.
-    public TennisUser(int playerID, String email, String contactNo, String fname, String lname, String clubName, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
+    public TennisUser(int playerID, String email, String contactNo, String fname, String lname, String clubName, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.email = email;
         this.contactNo = contactNo;
@@ -34,6 +35,7 @@ public class TennisUser implements Parcelable {
         this.lname = lname;
         this.clubName = clubName;
         this.elo = elo;
+        this.winstreak = winstreak;
         this.hotstreak = hotstreak;
         this.matchesPlayed = matchesPlayed;
         this.wins = wins;
@@ -43,11 +45,12 @@ public class TennisUser implements Parcelable {
     }
 
     // Challenges data, required for reporting a result.
-    public TennisUser(int playerID, String fname, String lname, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
+    public TennisUser(int playerID, String fname, String lname, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
         this.elo = elo;
+        this.winstreak = winstreak;
         this.hotstreak = hotstreak;
         this.matchesPlayed = matchesPlayed;
         this.wins = wins;
@@ -79,6 +82,7 @@ public class TennisUser implements Parcelable {
         lname = in.readString();
         clubName = in.readString();
         elo = in.readInt();
+        winstreak = in.readInt();
         hotstreak = in.readInt();
         matchesPlayed = in.readInt();
         wins = in.readInt();
@@ -112,6 +116,8 @@ public class TennisUser implements Parcelable {
     public int getElo() {
         return elo;
     }
+
+    public int getWinstreak() { return winstreak; }
 
     public int getHotstreak() { return hotstreak; }
 
@@ -151,6 +157,7 @@ public class TennisUser implements Parcelable {
         dest.writeString(lname);
         dest.writeString(clubName);
         dest.writeInt(elo);
+        dest.writeInt(winstreak);
         dest.writeInt(hotstreak);
         dest.writeInt(matchesPlayed);
         dest.writeInt(wins);

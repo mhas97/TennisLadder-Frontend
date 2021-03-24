@@ -65,13 +65,14 @@ public class LoginFragment extends Fragment {
                     String lname = obj.getString("lname");
                     String clubName = obj.getString("clubname");
                     int elo = obj.getInt("elo");
+                    int winstreak = obj.getInt("winstreak");
                     int hotstreak = obj.getInt("hotstreak");
                     int matchesPlayed = obj.getInt("matchesplayed");
                     int wins = obj.getInt("wins");
                     int losses = obj.getInt("losses");
                     int highestElo = obj.getInt("highestelo");
                     int clubChamp = obj.getInt("clubchamp");
-                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubName, elo, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp);
+                    user = new TennisUser(playerID, email, contactNo, fname, lname, clubName, elo, winstreak, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp);
 
                     Intent intent = new Intent(getActivity(), MainActivity.class);
                     Bundle extras = new Bundle();
@@ -79,7 +80,7 @@ public class LoginFragment extends Fragment {
                     intent.putExtras(extras);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), "Incorrect username or password", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Incorrect username or password", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

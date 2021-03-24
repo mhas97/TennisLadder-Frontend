@@ -41,8 +41,9 @@ public class ReportScoreActivity extends AppCompatActivity {
 
         // Get challenge related info.
         int challengeID = challenge.getChallengeID();
+        TennisUser opponent = challenge.getOpponent();
         String userName = user.getFname() + " " + user.getLname();
-        String opponentName = challenge.getOpponent().getFname() + " " + challenge.getOpponent().getLname();
+        String opponentName = opponent.getFname() + " " + opponent.getLname();
 
         // Populate the winner selection spinner with participants.
         ArrayList<String> players = new ArrayList<>();
@@ -55,7 +56,7 @@ public class ReportScoreActivity extends AppCompatActivity {
         titleUser.setText(userName);
         titleOpponent.setText(opponentName);
         lastNameUser.setText(user.getLname());
-        lastNameOpponent.setText(challenge.getOpponent().getLname());
+        lastNameOpponent.setText(opponent.getLname());
 
         submitScore.setOnClickListener(v -> {
             // Identify the winner as selected by the spinner.
@@ -63,22 +64,29 @@ public class ReportScoreActivity extends AppCompatActivity {
             int loserID;
             int winnerElo;
             int loserElo;
+            int hotstreak;
+            int highestElo;
             String winner = spinnerWinner.getSelectedItem().toString();
-            if (winner == userName) {
+            if (winner.equals(userName)) {
                 winnerID = user.getplayerID();
                 loserID = challenge.getOpponent().getplayerID();
                 winnerElo = user.getElo();
                 loserElo = challenge.getOpponent().getElo();
+                hotstreak = (user.getWinstreak() + 1 == 3) ? 1 : 0; // 3 wins in a row is a "hotstreak".
+                highestElo = user.getHighestElo();
             }
             else {
-                winnerID = challenge.getOpponent().getplayerID();
+                winnerID = opponent.getplayerID();
                 loserID = user.getplayerID();
-                winnerElo = challenge.getOpponent().getElo();
+                winnerElo = opponent.getElo();
                 loserElo = user.getElo();
+                hotstreak = (opponent.getWinstreak() + 1 == 3) ? 1 : 0;
+                highestElo = opponent.getHighestElo();
             }
-            // Adjust the player ratings relative to the result.
-            winnerElo = getAdjustedRating(winnerElo, loserElo, true);
-            loserElo = getAdjustedRating(loserElo, winnerElo, false);
+            // Adjust the player ratings relative to the result, check if the winners elo is a personal best.
+            int adjustedWinnerElo = getAdjustedRating(winnerElo, loserElo, true);
+            int adjustedLoserElo = getAdjustedRating(loserElo, winnerElo, false);
+            int newHighestElo = Math.max(adjustedWinnerElo, highestElo);
 
             // Build a string to represent the score.
             StringBuilder scoreString = new StringBuilder();
@@ -97,7 +105,7 @@ public class ReportScoreActivity extends AppCompatActivity {
                 scoreString.append(set3Score2.getText().toString());
             }
             String score = scoreString.toString();
-            postResult(challengeID, winnerID, loserID, score, winnerElo, loserElo);
+            postResult(challengeID, winnerID, loserID, score, adjustedWinnerElo, adjustedLoserElo, newHighestElo, hotstreak);
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -110,16 +118,16 @@ public class ReportScoreActivity extends AppCompatActivity {
     }
 
     protected int getAdjustedRating(int toAdjust, int opponentElo, boolean winner) {
-        double expectedScore = 1/(1+Math.pow(10, (opponentElo-toAdjust)/400));
+        double expectedScore = 1/(1+Math.pow(10, ((double)opponentElo-(double)toAdjust)/400));
         double adjustFactor = 32;
         double result;
-        result = (winner == true) ? 1 : 0;
+        result = (winner) ? 1 : 0;
         double adjustedScore = adjustFactor*(result-expectedScore);
-        return toAdjust+(int)(Math.round(adjustedScore));
+        return (int)(toAdjust+(Math.round(adjustedScore)));
     }
 
     // Post the result to the database including the new ratings as adjusted by the Elo algorithm.
-    protected void postResult(int challengeID, int winnerID, int loserID, String score, int winnerElo, int loserElo) {
+    protected void postResult(int challengeID, int winnerID, int loserID, String score, int winnerElo, int loserElo, int newHighestElo, int hotstreak) {
         HashMap<String, String> params = new HashMap<>();
         params.put("challengeid", String.valueOf(challengeID));
         params.put("winnerid", String.valueOf(winnerID));
@@ -127,6 +135,8 @@ public class ReportScoreActivity extends AppCompatActivity {
         params.put("score", score);
         params.put("winnerelo", String.valueOf(winnerElo));
         params.put("loserelo", String.valueOf(loserElo));
+        params.put("newhighestelo", String.valueOf(newHighestElo));
+        params.put("hotstreak", String.valueOf(hotstreak));
         PostResult postResult = new PostResult(params);
         postResult.execute();
     }

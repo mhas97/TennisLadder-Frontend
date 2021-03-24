@@ -81,6 +81,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
                     String oppFname = obj.getString("fname");
                     String oppLname = obj.getString("lname");
                     int oppElo = obj.getInt("elo");
+                    int oppWinstreak = obj.getInt("winstreak");
                     int oppHotstreak = obj.getInt("hotstreak");
                     int oppMatchesPlayed = obj.getInt("matchesplayed");
                     int oppWins = obj.getInt("wins");
@@ -93,7 +94,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
                     int didInitiate = obj.getInt("didinitiate");
                     int accepted = obj.getInt("accepted");
                     TennisChallenge challenge = new TennisChallenge(challengeID,
-                            new TennisUser(oppID, oppFname, oppLname, oppElo, oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo, oppClubChamp),
+                            new TennisUser(oppID, oppFname, oppLname, oppElo, oppWinstreak, oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo, oppClubChamp),
                             date, time, location, didInitiate, accepted);
                     challenges.add(challenge);
                 }
