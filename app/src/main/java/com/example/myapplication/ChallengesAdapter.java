@@ -58,9 +58,9 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
 
         public ChallengeViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
-            cvResult = itemView.findViewById(R.id.cvResult);
-            status = itemView.findViewById(R.id.txtChallengeStatus);
-            opponent = itemView.findViewById(R.id.txtOpponent);
+            cvResult = itemView.findViewById(R.id.cvMatch);
+            status = itemView.findViewById(R.id.txtMatchStatus);
+            opponent = itemView.findViewById(R.id.txtMatchOpponent);
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);
         }

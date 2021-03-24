@@ -46,6 +46,14 @@ public class TennisChallenge implements Parcelable {
         accepted = in.readInt();
     }
 
+    public TennisChallenge(int challengeID, TennisUser opponent, String date, int didWin, String score) {
+        this.challengeID = challengeID;
+        this.opponent = opponent;
+        this.date = date;
+        this.didWin = didWin;
+        this.score = score;
+    }
+
     public static final Creator<TennisChallenge> CREATOR = new Creator<TennisChallenge>() {
         @Override
         public TennisChallenge createFromParcel(Parcel in) {

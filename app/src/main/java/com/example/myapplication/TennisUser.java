@@ -74,6 +74,13 @@ public class TennisUser implements Parcelable {
         this.clubChamp = clubChamp;
     }
 
+    // Match history data.
+    public TennisUser(int playerID, String fname, String lname) {
+        this.playerID = playerID;
+        this.fname = fname;
+        this.lname = lname;
+    }
+
     protected TennisUser(Parcel in) {
         playerID = in.readInt();
         email = in.readString();

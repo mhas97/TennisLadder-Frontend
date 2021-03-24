@@ -9,7 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -84,12 +83,14 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
     @Override
     public void onNoteClick(int position) {
         TennisUser tappedPlayer = globalPlayers.get(position);
-        Intent intent = new Intent(getActivity(), ProfileActivity.class);
-        Bundle extras = new Bundle();
-        extras.putParcelable("user", MainActivity.getUser());
-        extras.putParcelable("tappedPlayer", tappedPlayer);
-        intent.putExtras(extras);
-        startActivity(intent);
+        if (tappedPlayer.getplayerID() != MainActivity.getUser().getplayerID()) {
+            Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            Bundle extras = new Bundle();
+            extras.putParcelable("user", MainActivity.getUser());
+            extras.putParcelable("tappedPlayer", tappedPlayer);
+            intent.putExtras(extras);
+            startActivity(intent);
+        }
     }
 
     protected void getLadderData() {

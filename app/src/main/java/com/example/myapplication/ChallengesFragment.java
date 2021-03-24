@@ -48,11 +48,11 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     }
 
     protected void setUpRecyclerView(View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.challenges_recyclerview);
+        RecyclerView recyclerView = view.findViewById(R.id.matches_recyclerview);
         challengesAdapter = new ChallengesAdapter(getActivity(), challenges, onNoteListener);
         recyclerView.setAdapter(challengesAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
     }
 
     protected void getChallenges() {
