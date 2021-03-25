@@ -11,16 +11,23 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
+/**
+ * Handles the recycler view holder by populating it with a card view for each
+ * match.
+ */
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchViewHolder> {
 
-    private ArrayList<TennisChallenge> matches;
-    private Context context;
+    private final ArrayList<TennisChallenge> matches;
+    private final Context context;
 
     public MatchesAdapter(ArrayList<TennisChallenge> matches, Context context) {
         this.matches = matches;
         this.context = context;
     }
 
+    /**
+     * Inflate the matches_row layout for each challenge.
+     */
     @NonNull
     @Override
     public MatchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -29,20 +36,22 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
         return new MatchViewHolder(view);
     }
 
+    /**
+     * For each match view holder, modify it's contents relative to its associated data.
+     */
     @Override
     public void onBindViewHolder(@NonNull MatchesAdapter.MatchViewHolder holder, int position) {
         if (matches.get(position).getDidWin() == 1) {
-            holder.status.setText("Victory");
-            holder.cvMatch.setBackgroundColor(Color.parseColor("#FF8EF868"));
+            holder.txtStatus.setText("Victory");
+            holder.cvMatch.setBackgroundColor(Color.parseColor("#C2E179"));
         }
         else {
-            holder.status.setText("Defeat");
-            holder.cvMatch.setBackgroundColor(Color.parseColor("#FFF44336"));
+            holder.txtStatus.setText("Defeat");
+            holder.cvMatch.setBackgroundColor(Color.parseColor("#E35045"));
         }
         TennisUser opponent = matches.get(position).getOpponent();
-        holder.opponent.setText(opponent.getFname() + " " + opponent.getLname());
-        holder.score.setText(matches.get(position).getScore());
-        holder.date.setText(matches.get(position).getDate());
+        holder.txtOpponent.setText(opponent.getFname() + " " + opponent.getLname());
+        holder.txtScore.setText(matches.get(position).getScore());
     }
 
     @Override
@@ -50,18 +59,22 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
         return matches.size();
     }
 
+    /**
+     * Each match is contained within a view holder, containing data
+     * as well as an on-note listener.
+     */
     public static class MatchViewHolder extends RecyclerView.ViewHolder {
 
-        private CardView cvMatch;
-        private TextView status, opponent, score, date;
+        private final CardView cvMatch;
+        private final TextView txtStatus, txtOpponent, txtScore;
 
         public MatchViewHolder(@NonNull View itemView) {
             super(itemView);
+            // Identify page elements.
             cvMatch = itemView.findViewById(R.id.cvMatch);
-            status = itemView.findViewById(R.id.txtMatchStatus);
-            opponent = itemView.findViewById(R.id.txtMatchOpponent);
-            score = itemView.findViewById(R.id.txtMatchScore);
-            date = itemView.findViewById(R.id.txtMatchDate);
+            txtStatus = itemView.findViewById(R.id.txtMatchStatus);
+            txtOpponent = itemView.findViewById(R.id.txtMatchOpponent);
+            txtScore = itemView.findViewById(R.id.txtMatchScore);
         }
     }
 }

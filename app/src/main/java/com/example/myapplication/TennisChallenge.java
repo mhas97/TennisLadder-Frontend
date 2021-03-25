@@ -3,6 +3,10 @@ package com.example.myapplication;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Similarly to TennisUser, this class implements the Parcelable interface
+ * allowing challenge objects to be passed between pages.
+ */
 public class TennisChallenge implements Parcelable {
     private int challengeID;
     private TennisUser opponent;
@@ -14,6 +18,9 @@ public class TennisChallenge implements Parcelable {
     private int didInitiate;
     private int accepted;
 
+    /**
+     * For displaying challenge data on the active challenges page
+     */
     public TennisChallenge(int challengeID, TennisUser opponent, String date, String time, String location, int didInitiate, int accepted) {
         this.challengeID = challengeID;
         this.opponent = opponent;
@@ -24,28 +31,9 @@ public class TennisChallenge implements Parcelable {
         this.accepted = accepted;
     }
 
-    public TennisChallenge(int challengeID, TennisUser opponent, String date, String time, String location, String score, int didWin, int accepted) {
-        this.challengeID = challengeID;
-        this.opponent = opponent;
-        this.date = date;
-        this.time = time;
-        this.location = location;
-        this.score = score;
-        this.didWin = didWin;
-    }
-
-    protected TennisChallenge(Parcel in) {
-        challengeID = in.readInt();
-        opponent = in.readParcelable(TennisUser.class.getClassLoader());
-        date = in.readString();
-        time = in.readString();
-        location = in.readString();
-        score = in.readString();
-        didWin = in.readInt();
-        didInitiate = in.readInt();
-        accepted = in.readInt();
-    }
-
+    /**
+     * For displaying challenge data on the match history page
+     */
     public TennisChallenge(int challengeID, TennisUser opponent, String date, int didWin, String score) {
         this.challengeID = challengeID;
         this.opponent = opponent;
@@ -53,18 +41,6 @@ public class TennisChallenge implements Parcelable {
         this.didWin = didWin;
         this.score = score;
     }
-
-    public static final Creator<TennisChallenge> CREATOR = new Creator<TennisChallenge>() {
-        @Override
-        public TennisChallenge createFromParcel(Parcel in) {
-            return new TennisChallenge(in);
-        }
-
-        @Override
-        public TennisChallenge[] newArray(int size) {
-            return new TennisChallenge[size];
-        }
-    };
 
     public int getChallengeID() {
         return challengeID;
@@ -97,6 +73,30 @@ public class TennisChallenge implements Parcelable {
     public int getDidInitiate() { return didInitiate; }
 
     public int getAccepted() { return accepted; }
+
+    protected TennisChallenge(Parcel in) {
+        challengeID = in.readInt();
+        opponent = in.readParcelable(TennisUser.class.getClassLoader());
+        date = in.readString();
+        time = in.readString();
+        location = in.readString();
+        score = in.readString();
+        didWin = in.readInt();
+        didInitiate = in.readInt();
+        accepted = in.readInt();
+    }
+
+    public static final Creator<TennisChallenge> CREATOR = new Creator<TennisChallenge>() {
+        @Override
+        public TennisChallenge createFromParcel(Parcel in) {
+            return new TennisChallenge(in);
+        }
+
+        @Override
+        public TennisChallenge[] newArray(int size) {
+            return new TennisChallenge[size];
+        }
+    };
 
     @Override
     public int describeContents() {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +29,10 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
 
     private ArrayList<TennisChallenge> challenges;
     private ChallengesAdapter challengesAdapter;
+    RecyclerView recyclerChallenges;
     private final ChallengesAdapter.OnNoteListener onNoteListener = this;
+    private TextView txtWelcome;
+    private TextView txtMessage;
 
     /**
      * Identify and set up the recycler view, and make a network request
@@ -36,6 +40,11 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
      */
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_challenges, container, false);
+
+        // Identify welcome message elements, these only show if
+        // the user has no challenges.
+        txtWelcome = view.findViewById(R.id.txtWelcome);
+        txtMessage = view.findViewById(R.id.txtMessage);
 
         challenges = new ArrayList<>();
         setUpRecyclerView(view);
@@ -59,8 +68,8 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
      * upon completion of the network request.
      */
     protected void setUpRecyclerView(View view) {
-        RecyclerView recyclerChallenges = view.findViewById(R.id.recyclerViewChallenges);
-        challengesAdapter = new ChallengesAdapter(getActivity(), challenges, onNoteListener);
+        recyclerChallenges = view.findViewById(R.id.recyclerViewChallenges);
+        challengesAdapter = new ChallengesAdapter(getContext(), challenges, onNoteListener);
         recyclerChallenges.setAdapter(challengesAdapter);
         recyclerChallenges.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerChallenges.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
@@ -100,7 +109,6 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
 
         @Override
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
             parseResponse(s);
             // Notify the adapter that the data set has been altered by the network requeest.
             challengesAdapter.notifyDataSetChanged();
@@ -144,18 +152,29 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
                                     oppClubChamp), date, time, location, didInitiate, accepted);
                     challenges.add(challenge);
                 }
-                // Reverse the order so the latest challenge displays first
+                // Reverse the order so the latest challenge displays first.
                 Collections.reverse(challenges);
+                if (challenges.size() == 0) {
+                    txtWelcome.setVisibility(View.VISIBLE);
+                    txtMessage.setVisibility(View.VISIBLE);
+                }
+                else {
+                    txtWelcome.setVisibility(View.INVISIBLE);
+                    txtMessage.setVisibility(View.INVISIBLE);
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        // A request handler object to handle HTTP communication with the API.
+        /**
+         * Handle HTTP communication with the API via APIRequest.
+         */
         @Override
         protected String doInBackground(Void... voids) {
-            RequestHandler req = new RequestHandler();
-            return req.sendGetRequest(API_URL.URL_GET_CHALLENGES + MainActivity.getUser().getplayerID());
+            APIRequest req = new APIRequest();
+            int playerID = MainActivity.getUser().getplayerID();
+            return req.executeGetRequest(API_URL.URL_GET_CHALLENGES + playerID);
         }
     }
 }

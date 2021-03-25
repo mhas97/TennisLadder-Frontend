@@ -28,8 +28,9 @@
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
         android:hint="Email"
-        android:inputType="none"
+        android:inputType="textEmailAddress"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLoginTitle" />
@@ -46,6 +47,7 @@
         android:hint="Password"
         android:inputType="textPassword"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtEmailLogin" />

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
@@ -26,7 +25,9 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
         this.onNoteListener = onNoteListener;
     }
 
-    //Inflate the challenges_row layout for each challenge.
+    /**
+     * Inflate the challenges_row layout for each challenge.
+     */
     @NonNull
     @Override
     public ChallengeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,7 +36,9 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
         return new ChallengeViewHolder(view, onNoteListener);
     }
 
-    // For each challenge view holder, modify it's contents relative to its associated data.
+    /**
+     * For each challenge view holder, modify it's contents relative to its associated data.
+     */
     @Override
     public void onBindViewHolder(@NonNull ChallengeViewHolder holder, int position) {
         // Accepted challenge.
@@ -46,7 +49,7 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
         else if (challenges.get(position).getDidInitiate() == 0) {    // -1 flag indicates a match has not yet been played.
             holder.txtStatus.setText("Incoming Challenge");
         }
-        // Recieved challenge.
+        // Received challenge.
         else {
             holder.txtStatus.setText("Outgoing Challenge");
         }
@@ -71,7 +74,7 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
 
         public ChallengeViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
-            // Identify elements
+            // Identify page elements
             txtStatus = itemView.findViewById(R.id.txtMatchStatus);
             txtOpponent = itemView.findViewById(R.id.txtMatchOpponent);
 

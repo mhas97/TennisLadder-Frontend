@@ -8,8 +8,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import java.util.Calendar;
 
+/**
+ * Allows the user to select a time when creating a challenge.
+ */
 public class TimePickerFragment extends DialogFragment {
 
+    /**
+     *
+     * @param savedInstanceState Status of the app lifecycle.
+     * @return The selected time.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

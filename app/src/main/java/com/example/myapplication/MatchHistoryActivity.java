@@ -13,6 +13,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Allows viewing of user match history. Bundled data is passed
+ * in either one of two ways:
+ * - the users app data for viewing personal match history
+ * - accessing match history on another users profile
+ */
 public class MatchHistoryActivity extends AppCompatActivity {
 
     private ArrayList<TennisChallenge> matches;
@@ -24,15 +30,21 @@ public class MatchHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_history);
 
+        // Obtain the bundled data.
         Intent matchHistoryIntent = getIntent();
         Bundle matchExtras = matchHistoryIntent.getExtras();
         user = matchExtras.getParcelable("user");
 
+        // Set up page elements and fetch match history data via the API.
         matches = new ArrayList<>();
         setUpRecyclerView();
         getMatches();
     }
 
+    /**
+     * Create an adapter and attach it to the recycler view. Once the API request
+     * is complete, the adapter is notified and the match history data is displayed.
+     */
     protected void setUpRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewChallenges);
         matchesAdapter = new MatchesAdapter(matches, this);
@@ -41,13 +53,23 @@ public class MatchHistoryActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
     }
 
+    /**
+     * Create an asynchronous object to fetch match history via the API.
+     */
     protected void getMatches() {
         MatchHistoryRequest req = new MatchHistoryRequest();
         req.execute();
     }
 
+    /**
+     * An asynchronous task to fetch match history data via the API.
+     */
     private class MatchHistoryRequest extends AsyncTask<Void, Void, String> {
 
+        /**
+         * Parse the JSON encoded string and notify the adapter that the dataset
+         * has been changed.
+         */
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
@@ -55,6 +77,11 @@ public class MatchHistoryActivity extends AppCompatActivity {
             matchesAdapter.notifyDataSetChanged();
         }
 
+        /**
+         * Parse the JSON encoded string and create corresponding
+         * TennisChallenge objects.
+         * @param s Match history JSON encoded string.
+         */
         protected void parseResponse(String s) {
             try {
                 JSONObject object = new JSONObject(s);
@@ -71,17 +98,21 @@ public class MatchHistoryActivity extends AppCompatActivity {
                     TennisChallenge match = new TennisChallenge(challengeID, new TennisUser(oppID, oppFname, oppLname), date, didWin, score);
                     matches.add(match);
                 }
-                // Reverse the order so the latest challenge displays first
+                // Reverse the order so the latest challenge displays first.
                 Collections.reverse(matches);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
+        /**
+         * API Request.
+         */
         @Override
         protected String doInBackground(Void... voids) {
-            RequestHandler req = new RequestHandler();
-            return req.sendGetRequest(API_URL.URL_GET_MATCH_HISTORY + user.getplayerID());
+            APIRequest req = new APIRequest();
+            int playerID = user.getplayerID();
+            return req.executeGetRequest(API_URL.URL_GET_MATCH_HISTORY + playerID);
         }
     }
 }

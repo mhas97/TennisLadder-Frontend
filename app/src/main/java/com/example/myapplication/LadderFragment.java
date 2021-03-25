@@ -26,7 +26,7 @@ import java.util.Objects;
 
 /**
  * A fragment to display ladder information for a user. An adapter interface
- * is used to handle recycler view population and searching. An on-note listener
+ * is implemented to handle recycler view population and searching. An on-note listener
  * is used handle others players being tapped by the user. A recycler view is a dynamic
  * list which is ideal for displaying large sets of data. As such this is the primary
  * view holder used throughout this project.
@@ -34,10 +34,14 @@ import java.util.Objects;
  */
 public class LadderFragment extends Fragment implements LadderAdapter.OnNoteListener {
 
+    // Flag to indicates that the adapter needs initialising.
+    boolean adapterInitialised;
+
+    // Page elements.
     private TextView txtSearch;
     private RecyclerView recyclerLadder;
 
-    // 2 array lists are required to handle ladder filtering.
+    // 2 array lists are required to handle search filtering.
     private ArrayList<TennisUser> globalPlayers;
     private ArrayList<TennisUser> players;
 
@@ -57,9 +61,9 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         recyclerLadder = view.findViewById(R.id.recyclerViewLadder);
 
         players = new ArrayList<>();
+        adapterInitialised = false;
         getLadderData();
         setupToolbar(view);
-
         return view;
     }
 
@@ -119,7 +123,7 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         Toolbar toolbar = view.findViewById(R.id.my_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        // Disable the app title.
+        // Disable the app title to make space for the search text.
         Objects.requireNonNull((AppCompatActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         // Remove search tip if they are searching.
@@ -160,10 +164,19 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         {
             parseResponse(s);
             globalPlayers = players;
-            setupRecyclerView(players);
+            if (!adapterInitialised) {
+                setUpRecyclerView(players);
+                adapterInitialised = true;
+            }
+            // Otherwise simply notify the adapter that the data set may have changed.
+            else {
+                ladderAdapter.notifyDataSetChanged();
+            }
         }
 
-        // Parse the JSON string into player objects.
+        /**
+         * Parse the JSON string into player objects.
+         */
         protected void parseResponse(String s) {
             try {
                 players.clear();
@@ -187,24 +200,32 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
                 }
                 // Order the list by Elo.
                 Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
+                TennisUser user = MainActivity.getUser();
+                int userID = user.getplayerID();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        //Setup the adapter for the recycler view.
-        protected void setupRecyclerView(ArrayList<TennisUser> players) {
+        /**
+         * Setup the adapter for the recycler view, only happens on the initial run.
+         */
+        protected void setUpRecyclerView(ArrayList<TennisUser> players) {
             ladderAdapter = new LadderAdapter(getContext(), players, onNoteListener);
             recyclerLadder.setAdapter(ladderAdapter);
             recyclerLadder.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerLadder.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
         }
 
+        /**
+         * API Request.
+         * @return Error status.
+         */
         @Override
         protected String doInBackground(Void... voids)
         {
-            RequestHandler requestHandler = new RequestHandler();
-            return requestHandler.sendGetRequest(API_URL.URL_GET_LADDER_DATA);
+            APIRequest req = new APIRequest();
+            return req.executeGetRequest(API_URL.URL_GET_LADDER_DATA);
         }
     }
 }

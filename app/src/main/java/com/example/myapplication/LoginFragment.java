@@ -106,15 +106,13 @@ public class LoginFragment extends Fragment {
                     int highestElo = obj.getInt("highestelo");
                     int clubChamp = obj.getInt("clubchamp");
 
-                    // Create the resulting user object.
+                    // Create resulting user object.
                     return new TennisUser(playerID, email, contactNo, fname, lname,
                             clubName, elo, winstreak, hotstreak, matchesPlayed, wins,
                             losses, highestElo, clubChamp);
                 }
-                else {
-                    // Notify the user that invalid credentials have been entered.
-                    Toast.makeText(getContext(), "Incorrect username or password", Toast.LENGTH_SHORT).show();
-                }
+                String message = object.getString("message");
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -139,8 +137,8 @@ public class LoginFragment extends Fragment {
          */
         @Override
         protected String doInBackground(Void... voids) {
-            RequestHandler req = new RequestHandler();
-            return req.sendPostRequest(API_URL.URL_LOGIN, params);
+            APIRequest req = new APIRequest();
+            return req.executePostRequest(API_URL.URL_LOGIN, params);
         }
     }
 }

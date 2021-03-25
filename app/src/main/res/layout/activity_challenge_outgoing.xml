@@ -6,84 +6,98 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/txt_status"
+        android:id="@+id/txtStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Outgoing Challenge"
         android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtVsCViewer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="vs"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_status" />
+        app:layout_constraintTop_toBottomOf="@+id/txtStatus" />
 
     <TextView
-        android:id="@+id/txt_opponent"
+        android:id="@+id/txtOpponent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="TextView"
+        android:text="Opponent"
         android:textSize="30sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtVsCViewer" />
 
     <TextView
-        android:id="@+id/txt_date"
+        android:id="@+id/txtOpponentElo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="TextView"
+        android:layout_marginTop="4dp"
+        android:text="Elo"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_opponent" />
+        app:layout_constraintTop_toBottomOf="@+id/txtOpponent" />
 
     <TextView
-        android:id="@+id/txt_time"
+        android:id="@+id/txtDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Date"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtOpponentElo" />
+
+    <TextView
+        android:id="@+id/txtTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="TextView"
-        android:textSize="18sp"
+        android:text="Time"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_date" />
+        app:layout_constraintTop_toBottomOf="@+id/txtDate" />
 
     <TextView
-        android:id="@+id/txt_location"
+        android:id="@+id/txtLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-smallcaps"
-        android:text="TextView"
-        android:textSize="18sp"
+        android:text="Location"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_time" />
+        app:layout_constraintTop_toBottomOf="@+id/txtTime" />
 
     <Button
-        android:id="@+id/btn_cancel_outgoing"
+        android:id="@+id/btnCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Cancel Challenge"
+        android:background="@drawable/rounded_edge"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_location" />
+        app:layout_constraintTop_toBottomOf="@+id/txtLocation" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

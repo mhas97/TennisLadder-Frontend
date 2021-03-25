@@ -29,8 +29,9 @@
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
         android:hint="Username"
-        android:inputType="none"
+        android:inputType="none|textEmailAddress"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtSignupTitle" />
@@ -45,8 +46,9 @@
         android:background="@drawable/rounded_edge"
         android:fontFamily="sans-serif-smallcaps"
         android:hint="Password"
-        android:inputType="none"
+        android:inputType="none|textPassword"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtEmailSignup" />
@@ -63,6 +65,7 @@
         android:hint="Tel"
         android:inputType="none"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPasswordSignup" />
@@ -79,6 +82,7 @@
         android:hint="First Name"
         android:inputType="none"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtContactNoSignup" />
@@ -95,6 +99,7 @@
         android:hint="Last Name"
         android:inputType="none"
         android:padding="10dp"
+        android:singleLine="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtFnameSignup" />

@@ -7,19 +7,20 @@
     tools:context=".ReportScoreActivity">
 
     <TextView
-        android:id="@+id/txt_user_report_score"
+        android:id="@+id/txtUserReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="TextView"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/txtVsReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -27,19 +28,20 @@
         android:text="VS"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_user_report_score" />
+        app:layout_constraintTop_toBottomOf="@+id/txtUserReport" />
 
     <TextView
-        android:id="@+id/txt_opponent_report_score"
+        android:id="@+id/txtOpponentReport"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="TextView"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/txtVsReport" />
 
     <Spinner
         android:id="@+id/spinner_winner"
@@ -52,10 +54,10 @@
         android:layout_marginRight="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+        app:layout_constraintTop_toBottomOf="@+id/txtWinner" />
 
     <TextView
-        android:id="@+id/txt_user_last_name"
+        android:id="@+id/txtUserLastName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="48dp"
@@ -64,22 +66,24 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="TextView"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_winner" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/txtSet1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Set 1"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_user_last_name" />
+        app:layout_constraintTop_toBottomOf="@+id/txtUserLastName" />
 
     <TextView
-        android:id="@+id/txt_opponent_last_name"
+        android:id="@+id/txtOpponentLastName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -88,22 +92,24 @@
         android:fontFamily="sans-serif-smallcaps"
         android:text="TextView"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_winner" />
 
     <TextView
-        android:id="@+id/textView9"
+        android:id="@+id/txtSet2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Set 2"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_set1_score1" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSet1User" />
 
     <EditText
-        android:id="@+id/txt_set1_score1"
+        android:id="@+id/txtSet1User"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -113,42 +119,12 @@
         android:layout_marginRight="12dp"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/txt_set1_score2"
+        app:layout_constraintEnd_toStartOf="@+id/txtSet1Opponent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSet1" />
 
     <EditText
-        android:id="@+id/txt_set1_score2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txt_set1_score1"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
-    <EditText
-        android:id="@+id/txt_set2_score1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/txt_set2_score2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-    <EditText
-        android:id="@+id/txt_set2_score2"
+        android:id="@+id/txtSet1Opponent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -159,34 +135,66 @@
         android:ems="10"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txt_set2_score1"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+        app:layout_constraintStart_toEndOf="@+id/txtSet1User"
+        app:layout_constraintTop_toBottomOf="@+id/txtSet1" />
+
+    <EditText
+        android:id="@+id/txtSet2User"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/txtSet2Opponent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSet2" />
+
+    <EditText
+        android:id="@+id/txtSet2Opponent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/txtSet2User"
+        app:layout_constraintTop_toBottomOf="@+id/txtSet2" />
 
     <Button
-        android:id="@+id/btn_confirm_score"
+        android:id="@+id/btnConfirmScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Confirm Score"
+        android:background="@drawable/rounded_edge"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_set3_score1" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSet3User" />
 
     <TextView
-        android:id="@+id/textView10"
+        android:id="@+id/txtWinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Winner"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_opponent_report_score" />
+        app:layout_constraintTop_toBottomOf="@+id/txtOpponentReport" />
 
     <EditText
-        android:id="@+id/txt_set3_score1"
+        android:id="@+id/txtSet3User"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -196,23 +204,24 @@
         android:layout_marginRight="12dp"
         android:ems="10"
         android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/txt_set3_score2"
+        app:layout_constraintEnd_toStartOf="@+id/txtSet3Opponent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSet3" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/txtSet3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="Set 3"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_set2_score2" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSet2Opponent" />
 
     <EditText
-        android:id="@+id/txt_set3_score2"
+        android:id="@+id/txtSet3Opponent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -223,7 +232,7 @@
         android:ems="10"
         android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txt_set3_score1"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintStart_toEndOf="@+id/txtSet3User"
+        app:layout_constraintTop_toBottomOf="@+id/txtSet3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

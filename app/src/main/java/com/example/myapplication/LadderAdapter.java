@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ import java.util.ArrayList;
  */
 public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderViewHolder> implements Filterable {
 
+    TennisUser user;
     // 2 lists are required for filtering via queries.
     private final ArrayList<TennisUser> players;
     private final ArrayList<TennisUser> completePlayers;
@@ -26,13 +29,13 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     private final OnNoteListener onNoteListener;
 
     public LadderAdapter(Context context, ArrayList<TennisUser> players, OnNoteListener onNoteListener) {
+        this.user = MainActivity.getUser();
         this.players = players;
         // Make a copy so they aren't pointing at the same list.
         this.completePlayers = new ArrayList<>(players);
         this.context = context;
         this.onNoteListener = onNoteListener;
     }
-
 
     /**
      * Inflate the ladder_row view layout for each player on the ladder.
@@ -52,9 +55,25 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
      */
     @Override
     public void onBindViewHolder(@NonNull LadderViewHolder holder, int position) {
+        // Identify relevant data.
+        int playerID = players.get(position).getplayerID();
+        String fname = players.get(position).getFname();
+        String lname = players.get(position).getLname();
+
+        // Set view fields.
         holder.txtRank.setText(String.valueOf(position + 1));
-        holder.txtFname.setText(players.get(position).getFname());
-        holder.txtLname.setText(players.get(position).getLname());
+        holder.txtFname.setText(fname);
+        holder.txtLname.setText(lname);
+
+        // Highlight the the app users view for visibility.
+        if (playerID == user.getplayerID()) {
+            holder.cvPlayer.setBackgroundColor(Color.parseColor("#C2E179"));
+        }
+        else {
+            holder.cvPlayer.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
+
+        // Identify players on a hotstreak;
         if (players.get(position).getHotstreak() == 1)
         {
             holder.imgHotstreak.setImageResource(R.drawable.hot_streak);
@@ -76,7 +95,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
 
     /**
      * The asynchronous filter class performs filtering on a background thread so won't
-     * freeze the app. It's results are automatically published to UI thread.
+     * freeze the app. Results are automatically published to UI thread.
      */
     private final Filter ladderFilter = new Filter() {
 
@@ -129,12 +148,14 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
      */
     public static class LadderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private final CardView cvPlayer;
         private final TextView txtRank, txtFname, txtLname, txtElo;
         private final ImageView imgHotstreak;
         private final OnNoteListener onNoteListener;
-
         public LadderViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
+            // Identify the elements.
+            cvPlayer = itemView.findViewById(R.id.cvPlayer);
             txtRank = itemView.findViewById(R.id.txtRank);
             txtFname = itemView.findViewById(R.id.txtFname);
             txtLname = itemView.findViewById(R.id.txtLname);
