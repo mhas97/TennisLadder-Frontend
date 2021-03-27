@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+/**
+ * Handles challenge creation, including formatting user input
+ * and making network requests to communicate with the API.
+ */
 public class ChallengeActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
     private Bundle challengeExtras;
@@ -28,23 +32,18 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
     private String time;
     private TennisUser user, opponent;
 
-    /**
-     * This class handles challenge creation, including formatting user input
-     * and handling network requests to communicate with the API.
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_challenge);
 
-        // Get user details for from the previous activity, this is
-        // required for challenge creation.
+        /* Obtain bundled user data. */
         Intent challengeIntent = getIntent();
         challengeExtras = challengeIntent.getExtras();
         user = challengeExtras.getParcelable("user");
         opponent = challengeExtras.getParcelable("opponent");
 
-        // Identify page elements.
+        /* Identify page elements */
         TextView txtUser = findViewById(R.id.txtChallengeUser);
         TextView txtOpponent = findViewById(R.id.txtChallengeOpponent);
         CalendarView calendarViewChallenge = findViewById(R.id.calendarChallengeDate);
@@ -52,12 +51,12 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
         btnTimePicker = findViewById(R.id.btnTimePicker);
         Button btnSubmitChallenge = findViewById(R.id.btnSubmitChallenge);
 
-        // Set page elements.
+        /* Set page elements. */
         txtUser.setText(user.getLname());
         txtOpponent.setText(opponent.getLname());
         setUpClubAdapter();
 
-        // Listener for the calender to check for a date selection.
+        /* Listener for the calender to check for a date selection. */
         date_seconds = calendarViewChallenge.getDate() / 1000;
         calendarViewChallenge.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             Calendar calendar = Calendar.getInstance();
@@ -65,44 +64,48 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
             date_seconds = calendar.getTimeInMillis() / 1000;
         });
 
-        // Listener for the time picker button, this will open
-        // a time picker fragment to allow the user to select a time.
+        /* Listener for the time picker button, opens a time picker fragment */
         btnTimePicker.setOnClickListener(v -> {
             DialogFragment tpf = new TimePickerFragment();
             tpf.show(getSupportFragmentManager(), "time picker");
         });
 
-        // Listener for a challenge submission.
+        /* Listener for a challenge submission. */
         btnSubmitChallenge.setOnClickListener(v -> {
             // Obtain parameters.
             int userID = user.getplayerID();
             int opponentID = opponent.getplayerID();
             String location = spinnerClub.getSelectedItem().toString();
 
-            // For easier data storage, send the API UNIX time and convert within the API,
-            // this will also make timezone handling easier.
+            /* For easier data storage, send the API UNIX time and convert
+            within the API, this  also makes timezone handling easier. */
             String date = String.valueOf(date_seconds);
 
-            // Create the challenge.
-            createChallenge(location, date, time);
+            /* Check that a time has been selected */
+            if (time == null) {
+                Toast.makeText(this, "Please select a time", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                createChallenge(location, date, time);  // Create the challenge.
+            }
         });
     }
 
     /**
-     * Use the user clubs to create an array list. Once complete, create
-     * an array adapter to attach to the spinner.
+     * Use the users clubs to create an array list. Once complete,
+     * create an array adapter to attach to the spinner.
      */
     protected void setUpClubAdapter() {
         ArrayList<String> clubs = new ArrayList<>();
         String userClub = user.getClubName();
         String opponentClub = opponent.getClubName();
         clubs.add(userClub);
-        // Check they are not from the same club.
+        /* Ensure users are not from the same club. */
         if (!userClub.equals(opponentClub)) {
             clubs.add(opponentClub);
         }
         ArrayAdapter<String> clubAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, clubs);
-        spinnerClub.setAdapter(clubAdapter);
+        spinnerClub.setAdapter(clubAdapter);    // Set the adapter.
     }
 
     /**
@@ -115,11 +118,11 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
     }
 
     /**
-     * Pass challenge parameters to the API via an asynchronous API request.
-     * The challenge table holds challenge metadata.
+     * Pass challenge parameters to the API via an asynchronous API
+     * request. The challenge table holds challenge metadata.
      */
     protected void createChallenge(String location, String date, String time) {
-        // Cast to string for hashmap representation.
+        /* Cast to string for hashmap representation. */
         HashMap<String, String> params = new HashMap<>();
         params.put("clubname", location);
         params.put("date", date);
@@ -129,10 +132,9 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
     }
 
     /**
-     * An asynchronous task to create challenge and player_challenge table entries,
-     * holding challenge metadata and player data respectively. The first network
-     * request returns an autogenerated challenge ID, which is then used to create
-     * the corresponding player_challenge entries.
+     * An asynchronous task to create challenge and player_challenge table entries, holding
+     * challenge metadata and player data respectively. The first network request returns an
+     * autogenerated challenge ID, which is then used to create the corresponding player_challenge entries.
      */
     private class ChallengeRequest extends AsyncTask<Void, Void, String> {
 
@@ -150,12 +152,12 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
             try {
                 JSONObject object = new JSONObject(s);
                 if (object.getString("error").equals("false")) {
-                    // Navigate.
+                    /* Navigate. */
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtras(challengeExtras);
                     startActivity(intent);
                 }
-                // Display status.
+                /* Display status. */
                 String message = object.getString("message");
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
@@ -164,14 +166,13 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
         }
 
         /**
-         * Make the initial challenge table entry. This returns a challenge ID
-         * which is used to create player_challenge entries.
+         * Make the initial challenge table entry. This returns a
+         * challenge ID which is used to create player_challenge entries.
          */
         @Override
         protected String doInBackground(Void... voids) {
             APIRequest challengeReq = new APIRequest();
-            // IDCatch catches the returned challenge ID.
-            String IDCatch = challengeReq.executePostRequest(API_URL.URL_CREATE_CHALLENGE, params);
+            String IDCatch = challengeReq.executePostRequest(API_URL.URL_CREATE_CHALLENGE, params); // Catch the challenge ID.
             return createPlayerChallenge(IDCatch);
         }
 
@@ -183,12 +184,12 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
             try {
                 JSONObject object = new JSONObject(IDCatch);
                 String challengeID = object.getString("challengeid");
-                // Create parameter hashmap.
+                /* Create parameter hashmap. */
                 HashMap<String, String> playerChallengeParams = new HashMap<>();
                 playerChallengeParams.put("challengeid", challengeID);
                 playerChallengeParams.put("playerid", String.valueOf(user.getplayerID()));
                 playerChallengeParams.put("opponentid", String.valueOf(opponent.getplayerID()));
-                // Execute the network request, return the error status.
+                /* Execute the network request, return the error status. */
                 return playerChallengeRequest.executePostRequest(API_URL.URL_CREATE_PLAYER_CHALLENGE, playerChallengeParams);
             } catch (JSONException e) {
                 e.printStackTrace();

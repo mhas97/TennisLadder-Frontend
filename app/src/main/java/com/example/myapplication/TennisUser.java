@@ -26,7 +26,7 @@ public class TennisUser implements Parcelable {
     private int highestElo;
     private int clubChamp;
 
-    // App user data to be passed around the app.
+    /* App user data to be passed around the app. */
     public TennisUser(int playerID, String email, String contactNo, String fname, String lname, String clubName, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.email = email;
@@ -44,9 +44,7 @@ public class TennisUser implements Parcelable {
         this.clubChamp = clubChamp;
     }
 
-    /**
-     * Challenges data, required for reporting a result.
-     */
+    /* Challenges data, required for reporting a result. */
     public TennisUser(int playerID, String fname, String lname, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.fname = fname;
@@ -61,9 +59,7 @@ public class TennisUser implements Parcelable {
         this.clubChamp = clubChamp;
     }
 
-    /**
-     * Ladder and profile data, required for creating a challenge.
-     */
+    /* Ladder and profile data, required for creating a challenge. */
     public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
         this.playerID = playerID;
         this.fname = fname;
@@ -78,9 +74,8 @@ public class TennisUser implements Parcelable {
         this.clubChamp = clubChamp;
     }
 
-    /**
-     * Match history data.
-     */
+
+    /* Match history data */
     public TennisUser(int playerID, String fname, String lname) {
         this.playerID = playerID;
         this.fname = fname;
@@ -93,25 +88,15 @@ public class TennisUser implements Parcelable {
         return email;
     }
 
-    public String getContactNo() {
-        return contactNo;
-    }
+    public String getContactNo() { return contactNo; }
 
-    public String getFname() {
-        return fname;
-    }
+    public String getFname() { return fname; }
 
-    public String getLname() {
-        return lname;
-    }
+    public String getLname() { return lname; }
 
-    public String getClubName() {
-        return clubName;
-    }
+    public String getClubName() { return clubName; }
 
-    public int getElo() {
-        return elo;
-    }
+    public int getElo() { return elo; }
 
     public int getWinstreak() { return winstreak; }
 
@@ -126,6 +111,8 @@ public class TennisUser implements Parcelable {
     public int getHighestElo() { return highestElo; }
 
     public int getClubChamp() { return clubChamp; }
+
+    /* Parcel methods. */
 
     protected TennisUser(Parcel in) {
         playerID = in.readInt();

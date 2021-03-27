@@ -18,9 +18,7 @@ public class TennisChallenge implements Parcelable {
     private int didInitiate;
     private int accepted;
 
-    /**
-     * For displaying challenge data on the active challenges page
-     */
+    /* For displaying challenge data on the active challenges page. */
     public TennisChallenge(int challengeID, TennisUser opponent, String date, String time, String location, int didInitiate, int accepted) {
         this.challengeID = challengeID;
         this.opponent = opponent;
@@ -31,9 +29,7 @@ public class TennisChallenge implements Parcelable {
         this.accepted = accepted;
     }
 
-    /**
-     * For displaying challenge data on the match history page
-     */
+    /* For displaying challenge data on the match history page. */
     public TennisChallenge(int challengeID, TennisUser opponent, String date, int didWin, String score) {
         this.challengeID = challengeID;
         this.opponent = opponent;
@@ -42,37 +38,25 @@ public class TennisChallenge implements Parcelable {
         this.score = score;
     }
 
-    public int getChallengeID() {
-        return challengeID;
-    }
+    public int getChallengeID() { return challengeID; }
 
-    public TennisUser getOpponent() {
-        return opponent;
-    }
+    public TennisUser getOpponent() { return opponent; }
 
-    public String getDate() {
-        return date;
-    }
+    public String getDate() { return date; }
 
-    public String getTime() {
-        return time;
-    }
+    public String getTime() { return time; }
 
-    public String getLocation() {
-        return location;
-    }
+    public String getLocation() { return location; }
 
-    public String getScore() {
-        return score;
-    }
+    public String getScore() { return score; }
 
-    public int getDidWin() {
-        return didWin;
-    }
+    public int getDidWin() {return didWin; }
 
     public int getDidInitiate() { return didInitiate; }
 
     public int getAccepted() { return accepted; }
+
+    /* Parcel methods. */
 
     protected TennisChallenge(Parcel in) {
         challengeID = in.readInt();

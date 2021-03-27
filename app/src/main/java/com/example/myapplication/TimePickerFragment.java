@@ -14,7 +14,6 @@ import java.util.Calendar;
 public class TimePickerFragment extends DialogFragment {
 
     /**
-     *
      * @param savedInstanceState Status of the app lifecycle.
      * @return The selected time.
      */

@@ -18,11 +18,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * A fragment to display challenge information for a user. An adapter interface
- * is used to handle recycler view population, as well as an on-note listener to
- * handle individual challenges being tapped by the user. A recycler view is a dynamic
- * list which is ideal for displaying large sets of data. As such this is the primary
- * view holder used throughout this project.
+ * Fragment to display challenge information for a user. An adapter interface is used
+ * to handle recycler view population, as well as an on-note listener to handle individual
+ * challenges interaction. A recycler view is a dynamic list which is ideal for displaying
+ * large sets of data. As such this is the primary view holder used throughout this project.
  * (https://developer.android.com/guide/topics/ui/layout/recyclerview)
  */
 public class ChallengesFragment extends Fragment implements ChallengesAdapter.OnNoteListener {
@@ -35,14 +34,12 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     private TextView txtMessage;
 
     /**
-     * Identify and set up the recycler view, and make a network request
-     * to fetch challenge data.
+     * Identify and set up the recycler view. Make a network request to fetch challenge data.
      */
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_challenges, container, false);
 
-        // Identify welcome message elements, these only show if
-        // the user has no challenges.
+        /* Identify welcome message elements, these only show if the user has no challenges. */
         txtWelcome = view.findViewById(R.id.txtWelcome);
         txtMessage = view.findViewById(R.id.txtMessage);
 
@@ -53,8 +50,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     }
 
     /**
-     * Upon resuming the fragment, execute a network request to check
-     * for any new challenges.
+     * Upon resuming the fragment, execute a network request to check for new challenges.
      */
     @Override
     public void onResume() {
@@ -63,9 +59,8 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     }
 
     /**
-     * Identify the recycler view element. An adapter is then created
-     * holding a reference to the challenges list. This list is populated
-     * upon completion of the network request.
+     * Identify the recycler view element. An adapter is then created holding a reference
+     * to the challenges list. The list is populated upon completion of the network request.
      */
     protected void setUpRecyclerView(View view) {
         recyclerChallenges = view.findViewById(R.id.recyclerViewChallenges);
@@ -76,8 +71,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     }
 
     /**
-     * Create an object to perform an asynchronous network request to fetch
-     * user challenges.
+     * Create an object to perform an asynchronous network request to fetch user challenges.
      */
     protected void getChallenges() {
         ChallengesRequest req = new ChallengesRequest();
@@ -85,11 +79,10 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     }
 
     /**
-     * An on-note listener is implemented to handle challenge taps. A note
-     * refers to an object in the recycler view. When a note (a challenge)
-     * is tapped, corresponding data is bundled an passed to the challenge viewer
-     * activity.
-     * @param position the position of the note tapped.
+     * An on-note listener is implemented to handle challenge taps. A note refers to an
+     * object in the recycler view. When a note is tapped, corresponding data is bundled
+     * and passed to the challenge viewer activity.
+     * @param position the position of the tapped note.
      */
     @Override
     public void onNoteClick(int position) {
@@ -107,25 +100,28 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
      */
     private class ChallengesRequest extends AsyncTask<Void, Void, String> {
 
+        /**
+         * Notify the adapter that the data set has been altered by the network request.
+         */
         @Override
         protected void onPostExecute(String s) {
             parseResponse(s);
-            // Notify the adapter that the data set has been altered by the network requeest.
             challengesAdapter.notifyDataSetChanged();
         }
 
         /**
-         * Parses challenge data and creates an array list of challenges.
-         * When this process is finished, the adapter is notified that the
-         * data set has been modified.
-         * @param s challenge data JSON string
+         * Parses challenge data and creates an array list of challenges. When this process
+         * is finished, the adapter is notified that the data set has been modified.
+         * @param s challenge data JSON string.
          */
         protected void parseResponse(String s) {
             try {
-                challenges.clear(); // Clear the dataset to ensure up to date information is displayed between fragment switches.
+                /* Clear the dataset to ensure up to date information is displayed between fragment switches */
+                challenges.clear();
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("challenges");
                 for (int i = 0; i < arr.length(); ++i) {
+                    /* Parse response. */
                     JSONObject obj = arr.getJSONObject(i);
                     int challengeID = obj.getInt("challengeid");
                     int oppID = obj.getInt("opponentid");
@@ -145,14 +141,14 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
                     int didInitiate = obj.getInt("didinitiate");
                     int accepted = obj.getInt("accepted");
 
-                    // The resulting challenge object.
+                    /* Create the resulting challenge object. */
                     TennisChallenge challenge = new TennisChallenge(challengeID,
                             new TennisUser(oppID, oppFname, oppLname, oppElo, oppWinstreak,
                                     oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo,
                                     oppClubChamp), date, time, location, didInitiate, accepted);
                     challenges.add(challenge);
                 }
-                // Reverse the order so the latest challenge displays first.
+                /* Reverse the order so the latest challenge displays first. */
                 Collections.reverse(challenges);
                 if (challenges.size() == 0) {
                     txtWelcome.setVisibility(View.VISIBLE);

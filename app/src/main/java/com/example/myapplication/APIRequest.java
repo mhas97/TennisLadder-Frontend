@@ -15,19 +15,20 @@ import java.util.Map;
 /**
  * This class is used to make API requests via the HTTPURLConnection class.
  * Some of the structure and methods found in this class are found in the following tutorials:
- * [REF: https://www.simplifiedcoding.net/android-mysql-tutorial-to-perform-basic-crud-operation/#Android-MySQL-Tutorial].
+ * [REF: https://www.simplifiedcoding.net/android-mysql-tutorial-to-perform-basic-crud-operation/#Android-MySQL-Tutorial]
+ *  * https://developer.android.com/reference/java/net/HttpURLConnection
+ *
  * HTTPURLConnection as described in the Android documentation should follow a basic pattern:
  * - Open the connection
  * - Prepare the request
  * - Upload a request body if needed
  * - Read the response
  * - Close the connection
- * https://developer.android.com/reference/java/net/HttpURLConnection
  */
 public class APIRequest {
+
     /**
-     * Execute a post request via HTTPURLConnection. Use a string
-     * builder to format the response.
+     * Execute a post request via HTTPURLConnection. Use a string builder to format the response.
      * @param API_URL The request URL.
      * @param params Parameters required by the API.
      * @return The formatted response.
@@ -36,7 +37,7 @@ public class APIRequest {
         URL url;
         StringBuilder responseBuilder = new StringBuilder();
         try {
-            // Open the connection, set a 20 second timeout.
+            /* Open the connection, set a 20 second timeout. */
             url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(20000);
@@ -45,7 +46,7 @@ public class APIRequest {
             connection.setDoInput(true);
             connection.setDoOutput(true);
 
-            // Create an output stream for preparing the request and format the post data.
+            /* Create an output stream for preparing the request and format the post data. */
             OutputStream outputStream = connection.getOutputStream();
             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
             bufferedWriter.write(formatPostData(params));
@@ -53,7 +54,7 @@ public class APIRequest {
             bufferedWriter.close();
             outputStream.close();
 
-            // Get the response
+            /* Get the response. */
             int responseCode = connection.getResponseCode();
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -62,7 +63,7 @@ public class APIRequest {
                     responseBuilder.append(response);
                 }
             }
-            // Disconnect.
+            /* Disconnect. */
             connection.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,12 +72,13 @@ public class APIRequest {
     }
 
     /**
-     * Use a string builder and URL encoder to produce a URL encoded string for a post request.
+     * Use a string builder and URL encoder to produce a formatted string for a post request.
      * @param params Parameters required by the API.
-     * @return The encoded post data string.
+     * @return The URL encoded string.
      */
     private String formatPostData(HashMap<String, String> params) throws UnsupportedEncodingException {
         StringBuilder formattedParams = new StringBuilder();
+        /* Encode each parameter */
         for (Map.Entry<String, String> entry : params.entrySet()) {
             formattedParams.append("&");
             formattedParams.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
@@ -87,27 +89,26 @@ public class APIRequest {
     }
 
     /**
-     * Execute a get request via HTTPURLConnection. Use a string
-     * builder to format the response.
+     * Execute a get request via HTTPURLConnection. Use a string builder to format the response.
      * @param API_URL The request URL.
      * @return The formatted response.
      */
     public String executeGetRequest(String API_URL) {
         StringBuilder responseBuilder = new StringBuilder();
         try {
-            // Open the connection, set a 20 second timeout.
+            /* Open the connection, set a 20 second timeout. */
             URL url = new URL(API_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setReadTimeout(20000);
             connection.setConnectTimeout(20000);
 
-            // Get the response.
+            /* Get the response. */
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String response;
             while ((response = br.readLine()) != null) {
                 responseBuilder.append(response).append("\n");
             }
-            // Disconnect.
+            /* Disconnect. */
             connection.disconnect();
         } catch (Exception e) {
             e.printStackTrace();

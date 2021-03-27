@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 /**
- * Handles the recycler view holder by populating it with a card view for each
- * challenge.
+ * Handles the recycler view holder by populating
+ * it with a card view for each challenge.
  */
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder> {
 
@@ -41,19 +41,19 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
      */
     @Override
     public void onBindViewHolder(@NonNull ChallengeViewHolder holder, int position) {
-        // Accepted challenge.
+        /* Accepted challenge. */
         if (challenges.get(position).getAccepted() == 1) {
             holder.txtStatus.setText("It's On!");
         }
-        // Initiated challenge.
-        else if (challenges.get(position).getDidInitiate() == 0) {    // -1 flag indicates a match has not yet been played.
+        /* Initiated challenge. */
+        else if (challenges.get(position).getDidInitiate() == 0) {
             holder.txtStatus.setText("Incoming Challenge");
         }
-        // Received challenge.
+        /* Received challenge. */
         else {
             holder.txtStatus.setText("Outgoing Challenge");
         }
-        // Display opponent data.
+        /* Display opponent data. */
         String opponentName = challenges.get(position).getOpponent().getFname() + " " + challenges.get(position).getOpponent().getLname();
         holder.txtOpponent.setText(opponentName);
     }
@@ -64,31 +64,26 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
     }
 
     /**
-     * Each challenge is contained within a view holder, containing data
-     * as well as an on-note listener.
+     * Provides each TennisChallenge object with a view holder, containing it's data.
+     * Also provides an on-note listener for each challenge allowing for user interaction.
      */
     public static class ChallengeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView txtStatus, txtOpponent;
         private final OnNoteListener onNoteListener;
 
+        /* Identify holder elements and set an on-note listener for each challenge. */
         public ChallengeViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
             super(itemView);
-            // Identify page elements
             txtStatus = itemView.findViewById(R.id.txtMatchStatus);
             txtOpponent = itemView.findViewById(R.id.txtMatchOpponent);
-
-            // Assign an on-note listener
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);
         }
 
-        /**
-         * Get the the position of the tap.
-         */
         @Override
         public void onClick(View v) {
-            onNoteListener.onNoteClick(getAdapterPosition());
+            onNoteListener.onNoteClick(getAdapterPosition());   // Get the position of the tap.
         }
     }
 

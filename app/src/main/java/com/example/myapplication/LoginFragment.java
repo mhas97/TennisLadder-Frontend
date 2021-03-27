@@ -15,9 +15,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 
 /**
- * Allows a user to enter credentials and attempt to login. Upon
- * success, the user will be navigated to the challenges page
- * along with a bundled object holding necessary user data.
+ * Allows a user to enter credentials and attempt to login. Upon success, the user will
+ * be navigated to the challenges page along with a bundled object holding necessary user data.
  */
 public class LoginFragment extends Fragment {
 
@@ -27,12 +26,12 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_login, container, false);
 
-        // Identify page elements.
+        /* Identify page elements. */
         txtEmail = view.findViewById(R.id.txtEmailLogin);
         txtPassword = view.findViewById(R.id.txtPasswordLogin);
         Button btnLogin = view.findViewById(R.id.btnLogin);
 
-        // Attempt to login upon button press.
+        /* Attempt to login upon button press. */
         btnLogin.setOnClickListener(v -> {
             attemptLogin();
         });
@@ -40,14 +39,13 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * Obtain user information and create a login request to
-     * execute asynchronously.
+     * Obtain user information and create a login request to execute asynchronously.
      */
     protected void attemptLogin() {
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
 
-        // Create a parameter hashmap to send to the API.
+        /* Create a parameter hashmap to send to the API. */
         HashMap<String, String> params = new HashMap<>();
         params.put("email", email);
         params.put("password", password);
@@ -62,13 +60,13 @@ public class LoginFragment extends Fragment {
     private class LoginRequest extends AsyncTask<Void, Void, String> {
         HashMap<String, String> params;
 
-        LoginRequest(HashMap<String, String> params) {
+        public LoginRequest(HashMap<String, String> params) {
             this.params = params;
         }
 
         /**
-         * When the network request is completed, attempt to parse the
-         * returned data and create a bundled user object.
+         * When the network request is completed, attempt to parse
+         * the returned data and create a bundled user object.
          */
         @Override
         protected void onPostExecute(String s) {
@@ -81,15 +79,15 @@ public class LoginFragment extends Fragment {
 
         /**
          * Attempt to parse the returned JSON string and create a user object.
-         * @param s User data JSON string
+         * @param s User data JSON string.
          * @return The resulting tennis user object.
          */
         protected TennisUser parseUserData(String s) {
             try {
                 JSONObject object = new JSONObject(s);
-                // Check for error status.
+                /* Check for error status. */
                 if (object.getString("error").equals("false")) {
-                    // Parse data.
+                    /* Parse the response. */
                     JSONObject obj = object.getJSONObject("player");
                     int playerID = obj.getInt("playerid");
                     String email = obj.getString("email");
@@ -106,11 +104,12 @@ public class LoginFragment extends Fragment {
                     int highestElo = obj.getInt("highestelo");
                     int clubChamp = obj.getInt("clubchamp");
 
-                    // Create resulting user object.
+                    /* Create resulting user object. */
                     return new TennisUser(playerID, email, contactNo, fname, lname,
                             clubName, elo, winstreak, hotstreak, matchesPlayed, wins,
                             losses, highestElo, clubChamp);
                 }
+                /* Display message via toast */
                 String message = object.getString("message");
                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
             } catch (JSONException e) {
@@ -120,9 +119,8 @@ public class LoginFragment extends Fragment {
         }
 
         /**
-         * Create an intent to navigate to the challenges page, as login
-         * has been successful. A Bundle containing user data is passed
-         * along with the intent.
+         * Create an intent to navigate to the challenges page, as login has been successful.
+         * A Bundle containing user data is passed along with the intent.
          */
         protected void login(TennisUser user) {
             Intent intent = new Intent(getActivity(), MainActivity.class);

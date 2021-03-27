@@ -21,56 +21,54 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Fetch user data from the bundle.
+        /* Fetch user data from the bundle. */
         Intent mainIntent = getIntent();
         Bundle mainExtras = mainIntent.getExtras();
         user = mainExtras.getParcelable("user");
 
-        // Identify and create both tab layout and view pager.
+        /* Identify and create both tab layout and view pager. */
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
 
-        // Connect the view pager and tab layout so the highlighted tab corresponds to the correct fragment.
+        /* Connect the view pager and tab layout so the highlighted tab corresponds to the correct fragment. */
         tabLayout.setupWithViewPager(viewPager);
 
-        // Create a tab for the 3 primary fragments.
+        /* Create a tab for the 3 primary fragments. */
         tabLayout.addTab(tabLayout.newTab().setText("Challenges"));
         tabLayout.addTab(tabLayout.newTab().setText("Ladder"));
         tabLayout.addTab(tabLayout.newTab().setText("Profile"));
 
-        // Create an adapter and attach it to the identified view pager.
-        MainAdapter mainAdapter= new MainAdapter(getSupportFragmentManager(), getApplicationContext(), 3);
+        /* Create an adapter and attach it to the identified view pager. */
+        MainAdapter mainAdapter= new MainAdapter(getSupportFragmentManager(), 3);
         viewPager.setAdapter(mainAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     }
 
     /**
-     * To ensure that forms aren't re-entered, the back button acts
-     * as a logout button.
+     * To ensure that forms aren't re-entered, the back button acts as a logout button.
      */
     @Override
     public void onBackPressed() {
-        // Create a dialog to check if the user wants to logout
+        /* Create a dialog to check if the user wants to logout. */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
         builder.setTitle("Logout");
         builder.setMessage("Are you sure you want to logout?");
         builder.setPositiveButton("Yes", (dialog, which) -> {
-            // Navigate to the login screen
+            /* Navigate to the login screen */
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         });
-        // Cancel
-        builder.setNegativeButton("No", (dialog, which) -> {
+        builder.setNegativeButton("No", (dialog, which) -> {    // Cancel.
         });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     /**
-     * Fragments make use of this function to acquire data about the app user.
-     * @return user object
+     * Fragments use of this function to acquire app user data.
+     * @return TennisUser object.
      */
     public static TennisUser getUser() {
         return user;
@@ -84,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
         private final int numTabs;
 
-        public MainAdapter(FragmentManager fm, Context context, int numTabs) {
+        public MainAdapter(FragmentManager fm, int numTabs) {
             super(fm);
             this.numTabs = numTabs;
         }

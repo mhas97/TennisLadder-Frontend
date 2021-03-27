@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * Allows viewing of user match history. Bundled data is passed
- * in either one of two ways:
+ * Allows viewing of user match history. Bundled data is passed in either one of two ways:
  * - the users app data for viewing personal match history
  * - accessing match history on another users profile
  */
@@ -30,19 +29,19 @@ public class MatchHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_history);
 
-        // Obtain the bundled data.
+        /* Obtain bundled data. */
         Intent matchHistoryIntent = getIntent();
         Bundle matchExtras = matchHistoryIntent.getExtras();
         user = matchExtras.getParcelable("user");
 
-        // Set up page elements and fetch match history data via the API.
+        /* Set up page elements and fetch match history data via the API. */
         matches = new ArrayList<>();
         setUpRecyclerView();
         getMatches();
     }
 
     /**
-     * Create an adapter and attach it to the recycler view. Once the API request
+     * Indentify the recycler view and attach its adapter. Once the API request
      * is complete, the adapter is notified and the match history data is displayed.
      */
     protected void setUpRecyclerView() {
@@ -67,8 +66,7 @@ public class MatchHistoryActivity extends AppCompatActivity {
     private class MatchHistoryRequest extends AsyncTask<Void, Void, String> {
 
         /**
-         * Parse the JSON encoded string and notify the adapter that the dataset
-         * has been changed.
+         * Parse the JSON encoded string and notify the adapter that the dataset has changed.
          */
         @Override
         protected void onPostExecute(String s) {
@@ -78,8 +76,7 @@ public class MatchHistoryActivity extends AppCompatActivity {
         }
 
         /**
-         * Parse the JSON encoded string and create corresponding
-         * TennisChallenge objects.
+         * Parse the JSON encoded string and create corresponding TennisChallenge objects.
          * @param s Match history JSON encoded string.
          */
         protected void parseResponse(String s) {
@@ -87,18 +84,19 @@ public class MatchHistoryActivity extends AppCompatActivity {
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("challenges");
                 for (int i = 0; i < arr.length(); ++i) {
+                    /* Parse the response. */
                     JSONObject obj = arr.getJSONObject(i);
                     int challengeID = obj.getInt("challengeid");
+                    int didWin = obj.getInt("didwin");
+                    String date = obj.getString("date");
+                    String score = obj.getString("score");
                     int oppID = obj.getInt("opponentid");
                     String oppFname = obj.getString("fname");
                     String oppLname = obj.getString("lname");
-                    String date = obj.getString("date");
-                    int didWin = obj.getInt("didwin");
-                    String score = obj.getString("score");
                     TennisChallenge match = new TennisChallenge(challengeID, new TennisUser(oppID, oppFname, oppLname), date, didWin, score);
                     matches.add(match);
                 }
-                // Reverse the order so the latest challenge displays first.
+                /* Reverse the order so the latest challenge displays first. */
                 Collections.reverse(matches);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -106,7 +104,7 @@ public class MatchHistoryActivity extends AppCompatActivity {
         }
 
         /**
-         * API Request.
+         * APIRequest object handles HTTP communication with the API.
          */
         @Override
         protected String doInBackground(Void... voids) {

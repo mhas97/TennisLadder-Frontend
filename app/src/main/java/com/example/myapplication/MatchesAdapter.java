@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 /**
- * Handles the recycler view holder by populating it with a card view for each
- * match.
+ * Handles the recycler view holder by populating it with a card view for each match.
  */
 public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchViewHolder> {
 
@@ -41,14 +40,17 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
      */
     @Override
     public void onBindViewHolder(@NonNull MatchesAdapter.MatchViewHolder holder, int position) {
+        /* Victory. */
         if (matches.get(position).getDidWin() == 1) {
             holder.txtStatus.setText("Victory");
             holder.cvMatch.setBackgroundColor(Color.parseColor("#C2E179"));
         }
+        /* Defeat. */
         else {
             holder.txtStatus.setText("Defeat");
             holder.cvMatch.setBackgroundColor(Color.parseColor("#E35045"));
         }
+        /* Populate with user data. */
         TennisUser opponent = matches.get(position).getOpponent();
         holder.txtOpponent.setText(opponent.getFname() + " " + opponent.getLname());
         holder.txtScore.setText(matches.get(position).getScore());
@@ -60,8 +62,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
     }
 
     /**
-     * Each match is contained within a view holder, containing data
-     * as well as an on-note listener.
+     * Each match is contained within a view holder, containing data as well as an on-note listener.
      */
     public static class MatchViewHolder extends RecyclerView.ViewHolder {
 
@@ -70,7 +71,7 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
 
         public MatchViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Identify page elements.
+            /* Identify page elements. */
             cvMatch = itemView.findViewById(R.id.cvMatch);
             txtStatus = itemView.findViewById(R.id.txtMatchStatus);
             txtOpponent = itemView.findViewById(R.id.txtMatchOpponent);

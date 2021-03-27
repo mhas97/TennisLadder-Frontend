@@ -10,8 +10,8 @@ import com.google.android.material.tabs.TabLayout;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Behaves as a fragment manager for both the login and signup activities.
- * An adapter instance is created to handle fragment switching and interaction.
+ * Behaves as a fragment manager for both the login and signup activities. An
+ * adapter instance is created to handle fragment switching and interaction.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -20,19 +20,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Identify tab layout and view pager elements, this allows for fragments to be switched upon user request.
+        /* Identify tab layout and view pager elements, this allows for fragments to be switched upon user request. */
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         ViewPager viewPager = findViewById(R.id.viewPager);
 
-        // Create a tab for both login and signup fragments.
+        /* Create a tab for both login and signup fragments. */
         tabLayout.addTab(tabLayout.newTab().setText("Login"));
         tabLayout.addTab(tabLayout.newTab().setText("Signup"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        // Connect the view pager and tab layout so the highlighted tab corresponds to the correct fragment.
+        /* Connect the view pager and tab layout so the highlighted tab corresponds to the correct fragment. */
         tabLayout.setupWithViewPager(viewPager);
 
-        // Create an adapter and attach it to the identified view pager.
+        /* Create an adapter and attach it to the identified view pager. */
         LoginSignupAdapter loginSignupAdapter = new LoginSignupAdapter(getSupportFragmentManager(), 2);
         viewPager.setAdapter(loginSignupAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -61,8 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 case 1:
                     return new SignupFragment();
             }
-            // In the case of an error, return the login fragment.
-            return new LoginFragment();
+            return new LoginFragment();     // In the case of an error, return the login fragment.
         }
 
         @Override

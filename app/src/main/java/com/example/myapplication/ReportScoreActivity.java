@@ -9,17 +9,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+import org.json.JSONException;
+import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Provides functionality to report a score. This includes
- * network requests to communicate with the API, as well as
- * Elo adjustment and achievement checks.
+ * Provides functionality to report a score. This includes network requests to
+ * communicate with the API, as well as Elo adjustment and achievement checks.
  */
 public class ReportScoreActivity extends AppCompatActivity {
 
     private Bundle challengeExtras;
+    private HashMap<String, String> achievementUpdater;
     EditText txtSet1User;
     EditText txtSet2User;
     EditText txtSet3User;
@@ -32,13 +35,13 @@ public class ReportScoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_score);
 
-        // Obtain bundle extras.
+        /* Obtain bundle extras. */
         Intent challengeIntent = getIntent();
         challengeExtras = challengeIntent.getExtras();
         TennisUser user = challengeExtras.getParcelable("user");
         TennisChallenge challenge = challengeExtras.getParcelable("challenge");
 
-        // Identify page elements.
+        /* Identify page elements. */
         TextView txtTitleUser = findViewById(R.id.txtUserReport);
         TextView txtTitleOpponent = findViewById(R.id.txtOpponentReport);
         Spinner spinnerWinner = findViewById(R.id.spinner_winner);
@@ -52,30 +55,29 @@ public class ReportScoreActivity extends AppCompatActivity {
         txtSet3Opponent = findViewById(R.id.txtSet3Opponent);
         Button btnSubmit = findViewById(R.id.btnConfirmScore);
 
-        // Get challenge related info.
+        /* Get challenge related info. */
         int challengeID = challenge.getChallengeID();
         TennisUser opponent = challenge.getOpponent();
         String userName = user.getFname() + " " + user.getLname();
         String opponentName = opponent.getFname() + " " + opponent.getLname();
 
-        // Populate the winner selection spinner with participants.
+        /* Populate the winner selection spinner with participants. */
         ArrayList<String> players = new ArrayList<>();
         players.add(userName);
         players.add(opponentName);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.support_simple_spinner_dropdown_item, players);
         spinnerWinner.setAdapter(arrayAdapter);
 
-        // Display challenge info.
+        /* Display challenge info. */
         txtTitleUser.setText(userName);
         txtTitleOpponent.setText(opponentName);
         txtUserLname.setText(user.getLname());
         txtOpponentLname.setText(opponent.getLname());
 
         btnSubmit.setOnClickListener(v -> {
-            // Identify the winner as selected by the spinner.
-            String winner = spinnerWinner.getSelectedItem().toString();
+            String winner = spinnerWinner.getSelectedItem().toString(); // Identify the winner as selected by the spinner.
 
-            // Achievement related variables.
+            // Variables used to signal necessary database changes.
             int winnerID;
             int winnerElo;
             int loserID;
@@ -83,26 +85,27 @@ public class ReportScoreActivity extends AppCompatActivity {
             int hotstreak;
             int currentHighestElo;
 
-            // Determine the winner.
+            /* Determine the winner */
             if (winner.equals(userName)) {
+                /* User is the winner. */
                 winnerID = user.getplayerID();
                 winnerElo = user.getElo();
                 loserID = challenge.getOpponent().getplayerID();
                 loserElo = challenge.getOpponent().getElo();
-                // Check if the user is on a hotstreak.
-                hotstreak = (user.getWinstreak() + 1 == 3) ? 1 : 0; // 3 wins in a row is a "hotstreak".
+                hotstreak = (user.getWinstreak() + 1 >= 3) ? 1 : 0;     // 3+ wins in a row is a "hotstreak".
                 currentHighestElo = user.getHighestElo();
             }
             else {
+                /* Opponent is the winner. */
                 winnerID = opponent.getplayerID();
                 winnerElo = opponent.getElo();
                 loserID = user.getplayerID();
                 loserElo = user.getElo();
-                hotstreak = (opponent.getWinstreak() + 1 == 3) ? 1 : 0;
+                hotstreak = (opponent.getWinstreak() + 1 >= 3) ? 1 : 0;
                 currentHighestElo = opponent.getHighestElo();
             }
 
-            // Adjust the player ratings relative to the result, check if the winners elo is a personal best.
+            /* Calculate adjusted player ratings and check if the winners elo is a personal best. */
             int adjustedWinnerElo = getAdjustedRating(winnerElo, loserElo, true);
             int adjustedLoserElo = getAdjustedRating(loserElo, winnerElo, false);
             int newHighestElo = Math.max(adjustedWinnerElo, currentHighestElo);
@@ -116,32 +119,35 @@ public class ReportScoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Adjust the elo for the given result. Note this is a simple Elo implementation,
-     * where no "consolation" is offered, score is also not taken into account. The
-     * probability of a victory is calculated and used to adjust the users Elo with
-     * respect to the actual result. Formula used from the following article:
+     * Adjust the elo for the given result. Note this is a simple Elo implementation, where no
+     * consolation" is offered, score is also not taken into account. The probability of a victory
+     * is calculated and used to adjust the users Elo with respect to the actual result. Formula
+     * used from the following article:
      * https://medium.com/purple-theory/what-is-elo-rating-c4eb7a9061e0#:~:text=The%20Elo%20rating%20system%20is,physics%20professor%20born%20in%201903.
      */
     protected int getAdjustedRating(int toAdjust, int opponentElo, boolean winner) {
-        // Calculate the Elo difference and convert to double for math.pow().
+        /* Calculate the Elo difference and convert to double for math.pow(). */
         double eloDiff = opponentElo - toAdjust;
 
-        // Calculate the probability of a victory.
+        /* Calculate the probability of victory for given user. */
         double expectedScore = 1 / (1 + Math.pow(10, eloDiff/400));
 
-        // The factor to adjust by, standard is 16. I have used 32 as the result
-        //volume is low and inflation likely not an issue. A larger reward should
-        //also provide incentive to play
+        /* The factor to adjust by, standard is 16. I have used 32 as the result volume is likely
+        low and inflation not an issue. A larger reward should also help further incentive to play. */
         double adjustFactor = 32;
 
-        // The actual result.
-        double result = (winner) ? 1 : 0;
+        double result = (winner) ? 1 : 0;   // The actual result.
 
-        // Calculate the adjusted score.
+        /* Calculate the adjusted Elo. */
         double adjustedScore = Math.round(adjustFactor * (result - expectedScore));
         return (int)(toAdjust + adjustedScore);
     }
 
+
+    /**
+     * Format the user entered score so it can be stored in the database
+     * @return Formatted score.
+     */
     protected String buildScore() {
         StringBuilder scoreString = new StringBuilder();
         scoreString.append(txtSet1User.getText().toString());
@@ -151,7 +157,7 @@ public class ReportScoreActivity extends AppCompatActivity {
         scoreString.append(txtSet2User.getText().toString());
         scoreString.append("/");
         scoreString.append(txtSet2Opponent.getText().toString());
-        // Only append a 3rd set score if it was played.
+        /* Only append a 3rd set score if it was played. */
         if (txtSet3User.getText().toString().length() > 0) {
             scoreString.append(" ");
             scoreString.append(txtSet3User.getText().toString());
@@ -162,9 +168,11 @@ public class ReportScoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Post the result to the database including the new ratings as adjusted by the Elo algorithm.
+     * Create the parameter hashmap and post the result to the database,
+     * including the new ratings as adjusted by the Elo algorithm.
      */
     protected void postResult(int challengeID, int winnerID, int loserID, String score, int winnerElo, int loserElo, int newHighestElo, int hotstreak) {
+        /* Create parameter hashmap */
         HashMap<String, String> params = new HashMap<>();
         params.put("challengeid", String.valueOf(challengeID));
         params.put("winnerid", String.valueOf(winnerID));
@@ -174,13 +182,13 @@ public class ReportScoreActivity extends AppCompatActivity {
         params.put("loserelo", String.valueOf(loserElo));
         params.put("newhighestelo", String.valueOf(newHighestElo));
         params.put("hotstreak", String.valueOf(hotstreak));
+        /* Execute API request. */
         PostResult req = new PostResult(params);
         req.execute();
     }
 
     /**
-     * An asynchronous task to communicate with the API to update
-     * challenge results.
+     * An asynchronous task to communicate with the API to update challenge results.
      */
     private class PostResult extends AsyncTask<Void, Void, String> {
 
@@ -191,17 +199,28 @@ public class ReportScoreActivity extends AppCompatActivity {
         }
 
         /**
-         * Navigate to the challenges page upon completion.
+         * Parse the response and navigate to the challenges page upon success.
          */
         @Override
         protected void onPostExecute(String s) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtras(challengeExtras);
-            startActivity(intent);
+            try {
+                JSONObject object = new JSONObject(s);
+                /* Display the error status via a toast. */
+                String message = object.getString("message");
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                if (object.getString("error").equals("false")) {
+                    /* Navigate to the challenges fragment. */
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtras(challengeExtras);
+                    startActivity(intent);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         /**
-         * API Request.
+         * Creates a APIRequest object to handle HTTP communication with the API.
          * @return Error status.
          */
         @Override
