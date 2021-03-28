@@ -4,12 +4,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
- * This activity provides functionality to view another players profile including their match history.
+ * This activity provides functionality to view another players profile including their match history
+ * and trophy cabinet.
  */
 public class ProfileActivity extends AppCompatActivity {
+
+    private ImageView imgTrophy1, imgTrophy2, imgTrophy3, imgTrophy4, imgTrophy5, imgTrophy6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +27,19 @@ public class ProfileActivity extends AppCompatActivity {
         TennisUser tappedPlayer = profileExtras.getParcelable("tappedPlayer");
 
         /* Identify page elements. */
-        TextView txtName = (TextView) findViewById(R.id.txtUserName);
-        TextView txtClub = (TextView) findViewById(R.id.txtUserClub);
+        TextView txtName = findViewById(R.id.txtUserName);
+        TextView txtClub = findViewById(R.id.txtUserClub);
         Button btnChallenge = findViewById(R.id.btnChallenge);
         Button btnMatchHistory = findViewById(R.id.btnMatchHistory);
+
+        /* Holders for potential achievement unlocks. */
+        imgTrophy1 = findViewById(R.id.imgTrophy1);
+        imgTrophy2 = findViewById(R.id.imgTrophy2);
+        imgTrophy3 = findViewById(R.id.imgTrophy3);
+        imgTrophy4 = findViewById(R.id.imgTrophy4);
+        imgTrophy5 = findViewById(R.id.imgTrophy5);
+        imgTrophy6 = findViewById(R.id.imgTrophy6);
+        setUpTrophyCabinet(tappedPlayer);
 
         /* Set page elements. */
         String playerName = tappedPlayer.getFname() + " " + tappedPlayer.getLname();
@@ -52,5 +65,17 @@ public class ProfileActivity extends AppCompatActivity {
             intent.putExtras(extras);
             startActivity(intent);
         });
+    }
+
+    /**
+     * Create trophy cabinet helper to format the trophy cabinet.
+     */
+    private void setUpTrophyCabinet(TennisUser user) {
+        /* Achievement holders. */
+        ImageView[] trophies = new ImageView[] {
+                imgTrophy1, imgTrophy2, imgTrophy3, imgTrophy4, imgTrophy5, imgTrophy6
+        };
+        TrophyCabinetHelper helper = new TrophyCabinetHelper(trophies, user, this);
+        helper.ArrangeTrophyCabinet();
     }
 }

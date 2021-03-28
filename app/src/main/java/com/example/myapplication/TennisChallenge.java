@@ -8,9 +8,9 @@ import android.os.Parcelable;
  * allowing challenge objects to be passed between pages.
  */
 public class TennisChallenge implements Parcelable {
-    private int challengeID;
-    private TennisUser opponent;
-    private String date;
+    private final int challengeID;
+    private final TennisUser opponent;
+    private final String date;
     private String time;
     private String location;
     private String score;

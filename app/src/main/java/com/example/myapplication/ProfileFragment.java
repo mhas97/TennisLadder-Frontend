@@ -18,6 +18,8 @@ import androidx.fragment.app.Fragment;
  */
 public class ProfileFragment extends Fragment {
 
+    private ImageView imgTrophy1, imgTrophy2, imgTrophy3, imgTrophy4, imgTrophy5, imgTrophy6;
+
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.fragment_profile, container, false);
 
@@ -25,10 +27,17 @@ public class ProfileFragment extends Fragment {
         TextView txtPlayerName = view.findViewById(R.id.txtUserName);
         TextView txtPlayerClub = view.findViewById(R.id.txtUserClub);
         Button btnMatchHistory = view.findViewById(R.id.btnPlayerMatchHistory);
-        ImageView imgDebut = view.findViewById(R.id.imgDebut);
+
+        imgTrophy1 = view.findViewById(R.id.imgTrophy1);
+        imgTrophy2 = view.findViewById(R.id.imgTrophy2);
+        imgTrophy3 = view.findViewById(R.id.imgTrophy3);
+        imgTrophy4 = view.findViewById(R.id.imgTrophy4);
+        imgTrophy5 = view.findViewById(R.id.imgTrophy5);
+        imgTrophy6 = view.findViewById(R.id.imgTrophy6);
+        TennisUser user = MainActivity.getUser();
+        setUpTrophyCabinet(user);
 
         /* Set page elements. */
-        TennisUser user = MainActivity.getUser();
         String userName = user.getFname() + " " + user.getLname();
         txtPlayerName.setText(userName);
         txtPlayerClub.setText(user.getClubName());
@@ -41,7 +50,18 @@ public class ProfileFragment extends Fragment {
             intent.putExtras(extras);
             startActivity(intent);
         });
-
         return view;
+    }
+
+    /**
+     * Create trophy cabinet helper to format the trophy cabinet.
+     */
+    protected void setUpTrophyCabinet(TennisUser user) {
+        /* Achievement holders. */
+        ImageView[] trophies = new ImageView[] {
+                imgTrophy1, imgTrophy2, imgTrophy3, imgTrophy4, imgTrophy5, imgTrophy6
+        };
+        TrophyCabinetHelper helper = new TrophyCabinetHelper(trophies, user, getContext());
+        helper.ArrangeTrophyCabinet();
     }
 }

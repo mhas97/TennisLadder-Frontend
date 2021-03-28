@@ -42,12 +42,12 @@ public class MatchesAdapter extends RecyclerView.Adapter<MatchesAdapter.MatchVie
     public void onBindViewHolder(@NonNull MatchesAdapter.MatchViewHolder holder, int position) {
         /* Victory. */
         if (matches.get(position).getDidWin() == 1) {
-            holder.txtStatus.setText("Victory");
+            holder.txtStatus.setText(R.string.victory);
             holder.cvMatch.setBackgroundColor(Color.parseColor("#C2E179"));
         }
         /* Defeat. */
         else {
-            holder.txtStatus.setText("Defeat");
+            holder.txtStatus.setText(R.string.defeat);
             holder.cvMatch.setBackgroundColor(Color.parseColor("#E35045"));
         }
         /* Populate with user data. */

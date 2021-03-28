@@ -1,8 +1,10 @@
 package com.example.myapplication;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,6 +32,7 @@ public class ReportScoreActivity extends AppCompatActivity {
     EditText txtSet2Opponent;
     EditText txtSet3Opponent;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,32 +77,41 @@ public class ReportScoreActivity extends AppCompatActivity {
         txtUserLname.setText(user.getLname());
         txtOpponentLname.setText(opponent.getLname());
 
+        /* On-click listener for the submit button, submits a result. */
         btnSubmit.setOnClickListener(v -> {
+
+            /* Identify the winner. */
             String winner = spinnerWinner.getSelectedItem().toString(); // Identify the winner as selected by the spinner.
 
-            // Variables used to signal necessary database changes.
+            /* Build a string to represent the score. */
+            String score = buildScore();
+
+            /* Variables to calculate database changes. */
             int winnerID;
             int winnerElo;
             int loserID;
             int loserElo;
-            int hotstreak;
-            int currentHighestElo;
+            int hotstreak;              // Check if the winner is now on a hotstreak.
+            int currentHighestElo;      // Check if the winner has achieved an Elo PB.
+            boolean userWon;            // Check if the reporting player won.
 
             /* Determine the winner */
             if (winner.equals(userName)) {
                 /* User is the winner. */
-                winnerID = user.getplayerID();
+                userWon = true;
+                winnerID = user.getPlayerID();
                 winnerElo = user.getElo();
-                loserID = challenge.getOpponent().getplayerID();
-                loserElo = challenge.getOpponent().getElo();
+                loserID = opponent.getPlayerID();
+                loserElo = opponent.getElo();
                 hotstreak = (user.getWinstreak() + 1 >= 3) ? 1 : 0;     // 3+ wins in a row is a "hotstreak".
                 currentHighestElo = user.getHighestElo();
             }
             else {
                 /* Opponent is the winner. */
-                winnerID = opponent.getplayerID();
+                userWon = false;
+                winnerID = opponent.getPlayerID();
                 winnerElo = opponent.getElo();
-                loserID = user.getplayerID();
+                loserID = user.getPlayerID();
                 loserElo = user.getElo();
                 hotstreak = (opponent.getWinstreak() + 1 >= 3) ? 1 : 0;
                 currentHighestElo = opponent.getHighestElo();
@@ -110,10 +122,11 @@ public class ReportScoreActivity extends AppCompatActivity {
             int adjustedLoserElo = getAdjustedRating(loserElo, winnerElo, false);
             int newHighestElo = Math.max(adjustedWinnerElo, currentHighestElo);
 
-            // Build a string to represent the score.
-            String score = buildScore();
+            /* Check for achievement unlocks. */
+            AchievementHandler achievementHandler = new AchievementHandler(user, opponent, score, adjustedWinnerElo, userWon, this);
+            achievementHandler.checkForUnlocks();
 
-            // Post the result.
+            /* Post the result. */
             postResult(challengeID, winnerID, loserID, score, adjustedWinnerElo, adjustedLoserElo, newHighestElo, hotstreak);
         });
     }
@@ -125,7 +138,7 @@ public class ReportScoreActivity extends AppCompatActivity {
      * used from the following article:
      * https://medium.com/purple-theory/what-is-elo-rating-c4eb7a9061e0#:~:text=The%20Elo%20rating%20system%20is,physics%20professor%20born%20in%201903.
      */
-    protected int getAdjustedRating(int toAdjust, int opponentElo, boolean winner) {
+    private int getAdjustedRating(int toAdjust, int opponentElo, boolean winner) {
         /* Calculate the Elo difference and convert to double for math.pow(). */
         double eloDiff = opponentElo - toAdjust;
 
@@ -143,12 +156,11 @@ public class ReportScoreActivity extends AppCompatActivity {
         return (int)(toAdjust + adjustedScore);
     }
 
-
     /**
      * Format the user entered score so it can be stored in the database
      * @return Formatted score.
      */
-    protected String buildScore() {
+    private String buildScore() {
         StringBuilder scoreString = new StringBuilder();
         scoreString.append(txtSet1User.getText().toString());
         scoreString.append("/");
@@ -171,7 +183,7 @@ public class ReportScoreActivity extends AppCompatActivity {
      * Create the parameter hashmap and post the result to the database,
      * including the new ratings as adjusted by the Elo algorithm.
      */
-    protected void postResult(int challengeID, int winnerID, int loserID, String score, int winnerElo, int loserElo, int newHighestElo, int hotstreak) {
+    private void postResult(int challengeID, int winnerID, int loserID, String score, int winnerElo, int loserElo, int newHighestElo, int hotstreak) {
         /* Create parameter hashmap */
         HashMap<String, String> params = new HashMap<>();
         params.put("challengeid", String.valueOf(challengeID));
@@ -182,6 +194,7 @@ public class ReportScoreActivity extends AppCompatActivity {
         params.put("loserelo", String.valueOf(loserElo));
         params.put("newhighestelo", String.valueOf(newHighestElo));
         params.put("hotstreak", String.valueOf(hotstreak));
+
         /* Execute API request. */
         PostResult req = new PostResult(params);
         req.execute();

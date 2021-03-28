@@ -48,7 +48,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
             setUpIncomingChallenge();
         }
 
-        /* Identify page elements */
+        /* Identify shared page elements */
         TextView txtOpponent = findViewById(R.id.txtOpponent);
         TextView txtOpponentElo = findViewById(R.id.txtOpponentElo);
         TextView txtDate = findViewById(R.id.txtDate);
@@ -79,7 +79,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
     /**
      * Display the layout for an accepted challenge with its options.
      */
-    protected void setUpAcceptedChallenge() {
+    private void setUpAcceptedChallenge() {
         /* Display the accepted challenge layout. */
         setContentView(R.layout.activity_challenge_accepted);
 
@@ -101,9 +101,9 @@ public class ChallengeViewerActivity extends AppCompatActivity {
     }
 
     /**
-     * Display the layout for an initiated challenge with its options.
+     * Display the layout for an outgoing challenge with its options.
      */
-    protected void setUpInitiatedChallenge() {
+    private void setUpInitiatedChallenge() {
         /* Display the initiated challenge layout. */
         setContentView(R.layout.activity_challenge_incoming);
 
@@ -123,7 +123,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
     /**
      * Display the layout for an incoming challenge with its options.
      */
-    protected void setUpIncomingChallenge() {
+    private void setUpIncomingChallenge() {
         /* Display the incoming challenge layout. */
         setContentView(R.layout.activity_challenge_outgoing);
 
@@ -139,7 +139,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
      * Setup the accept button for an activity including confirmation dialogue.
      * If the user confirms, accept the challenge via an API request.
      */
-    protected void setUpAcceptButton() {
+    private void setUpAcceptButton() {
         /* Create confirmation alert. */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -159,7 +159,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
      * Setup the decline button for the activity. If the user declines a challenge, it can
      * be cancelled as these operations have the same results. Upon confirmation make an API request.
      */
-    protected void setUpDeclineButton() {
+    private void setUpDeclineButton() {
         /* Create confirmation alert. */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -179,7 +179,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
      * Setup the cancel button for the activity (shared for accepted and outgoing challenges).
      * If the user confirms, cancel the challenge via an API request.
      */
-    protected void setUpCancelButton() {
+    private void setUpCancelButton() {
         /* Create confirmation alert. */
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
@@ -197,7 +197,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
     /**
      * Create an AcceptRequest object to execute asynchronously.
      */
-    protected void acceptChallenge(int challengeID) {
+    private void acceptChallenge(int challengeID) {
         AcceptRequest req = new AcceptRequest(challengeID);
         req.execute();
     }
@@ -205,7 +205,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
     /**
      * Create a CancelRequest object to execute asynchronously.
      */
-    protected void cancelChallenge(int challengeID, boolean cancelReq) {
+    private void cancelChallenge(int challengeID, boolean cancelReq) {
         CancelRequest req = new CancelRequest(challengeID, cancelReq);
         req.execute();
     }

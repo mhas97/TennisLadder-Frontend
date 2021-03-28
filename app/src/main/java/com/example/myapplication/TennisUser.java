@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import java.util.ArrayList;
 
 /**
  * This class implements the Parcelable interface, allowing user objects
@@ -25,9 +26,10 @@ public class TennisUser implements Parcelable {
     private int losses;
     private int highestElo;
     private int clubChamp;
+    private ArrayList<Integer> achievements;
 
     /* App user data to be passed around the app. */
-    public TennisUser(int playerID, String email, String contactNo, String fname, String lname, String clubName, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
+    public TennisUser(int playerID, String email, String contactNo, String fname, String lname, String clubName, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp, ArrayList<Integer> achievements) {
         this.playerID = playerID;
         this.email = email;
         this.contactNo = contactNo;
@@ -42,10 +44,11 @@ public class TennisUser implements Parcelable {
         this.losses = losses;
         this.highestElo = highestElo;
         this.clubChamp = clubChamp;
+        this.achievements = achievements;
     }
 
     /* Challenges data, required for reporting a result. */
-    public TennisUser(int playerID, String fname, String lname, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
+    public TennisUser(int playerID, String fname, String lname, int elo, int winstreak, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp, ArrayList<Integer> achievements) {
         this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
@@ -57,10 +60,11 @@ public class TennisUser implements Parcelable {
         this.losses = losses;
         this.highestElo = highestElo;
         this.clubChamp = clubChamp;
+        this.achievements = achievements;
     }
 
     /* Ladder and profile data, required for creating a challenge. */
-    public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp) {
+    public TennisUser(int playerID, String fname, String lname, String clubName, int elo, int hotstreak, int matchesPlayed, int wins, int losses, int highestElo, int clubChamp, ArrayList<Integer> achievements) {
         this.playerID = playerID;
         this.fname = fname;
         this.lname = lname;
@@ -72,8 +76,8 @@ public class TennisUser implements Parcelable {
         this.losses = losses;
         this.highestElo = highestElo;
         this.clubChamp = clubChamp;
+        this.achievements = achievements;
     }
-
 
     /* Match history data */
     public TennisUser(int playerID, String fname, String lname) {
@@ -82,7 +86,7 @@ public class TennisUser implements Parcelable {
         this.lname = lname;
     }
 
-    public int getplayerID() { return playerID; }
+    public int getPlayerID() { return playerID; }
 
     public String getEmail() {
         return email;
@@ -112,6 +116,8 @@ public class TennisUser implements Parcelable {
 
     public int getClubChamp() { return clubChamp; }
 
+    public ArrayList<Integer> getAchievements() { return achievements; }
+
     /* Parcel methods. */
 
     protected TennisUser(Parcel in) {
@@ -129,6 +135,7 @@ public class TennisUser implements Parcelable {
         losses = in.readInt();
         highestElo = in.readInt();
         clubChamp = in.readInt();
+        achievements = in.readArrayList(int.class.getClassLoader());
     }
 
     public static final Creator<TennisUser> CREATOR = new Creator<TennisUser>() {
@@ -164,5 +171,6 @@ public class TennisUser implements Parcelable {
         dest.writeInt(losses);
         dest.writeInt(highestElo);
         dest.writeInt(clubChamp);
+        dest.writeList(achievements);
     }
 }

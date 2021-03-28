@@ -105,15 +105,15 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
     /**
      * Create an object to perform an asynchronous network request to fetch ladder data.
      */
-    protected void getLadderData() {
+    private void getLadderData() {
         LadderRequest req = new LadderRequest();
         req.execute();
     }
 
     /* Setup the toolbar for user queries. */
-    protected void setupToolbar(View view) {
+    private void setupToolbar(View view) {
         setHasOptionsMenu(true);
-        /* The toolbar acts as the action bar (sits at the top of the page) in this case. */
+        /* In this case the toolbar acts as the support action bar (sits at the top of the page). */
         Toolbar toolbar = view.findViewById(R.id.my_toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
@@ -135,7 +135,7 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
     @Override
     public void onNoteClick(int position) {
         TennisUser tappedPlayer = globalPlayers.get(position);
-        if (tappedPlayer.getplayerID() != MainActivity.getUser().getplayerID()) {   // Can't challenge yourself!
+        if (tappedPlayer.getPlayerID() != MainActivity.getUser().getPlayerID()) {   // Can't challenge yourself!
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
             Bundle extras = new Bundle();
             extras.putParcelable("user", MainActivity.getUser());
@@ -156,7 +156,7 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         protected void onPostExecute(String s) {
             parseResponse(s);
             globalPlayers = players;
-            if (!adapterInitialised) {
+            if (!adapterInitialised) {  // Only initialise the adapter once.
                 setUpRecyclerView(players);
                 adapterInitialised = true;
             }
@@ -168,32 +168,35 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         /**
          * Parse the JSON string into player objects.
          */
-        protected void parseResponse(String s) {
+        private void parseResponse(String s) {
             try {
-                players.clear();    // Clear the dataset and repopulate with most recent API call.
+                players.clear();    // Clear the dataset and repopulate with data from the most recent API call.
                 JSONObject object = new JSONObject(s);
-                JSONArray arr = object.getJSONArray("players");
-                for (int i = 0; i < arr.length(); ++i) {
+                JSONArray playerArray = object.getJSONArray("players");
+                for (int i = 0; i < playerArray.length(); i++) {
                     /* Parse the response */
-                    JSONObject obj = arr.getJSONObject(i);
-                    int playerID = obj.getInt("playerid");
-                    String fname = obj.getString("fname");
-                    String lname = obj.getString("lname");
-                    String clubName = obj.getString("clubname");
-                    int elo = obj.getInt("elo");
-                    int hotstreak = obj.getInt("hotstreak");
-                    int matchesPlayed = obj.getInt("matchesplayed");
-                    int wins = obj.getInt("wins");
-                    int losses = obj.getInt("losses");
-                    int highestElo = obj.getInt("highestelo");
-                    int clubChamp = obj.getInt("clubchamp");
-                    TennisUser player = new TennisUser(playerID, fname, lname, clubName, elo, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp);
+                    JSONObject playerObject = playerArray.getJSONObject(i);
+                    int playerID = playerObject.getInt("playerid");
+                    String fname = playerObject.getString("fname");
+                    String lname = playerObject.getString("lname");
+                    String clubName = playerObject.getString("clubname");
+                    int elo = playerObject.getInt("elo");
+                    int hotstreak = playerObject.getInt("hotstreak");
+                    int matchesPlayed = playerObject.getInt("matchesplayed");
+                    int wins = playerObject.getInt("wins");
+                    int losses = playerObject.getInt("losses");
+                    int highestElo = playerObject.getInt("highestelo");
+                    int clubChamp = playerObject.getInt("clubchamp");
+
+                    /* Fetch the users achievement data. */
+                    ArrayList<Integer> achieved = parseAchieved(playerObject);
+
+                    /* Create the resulting challenge object. */
+                    TennisUser player = new TennisUser(playerID, fname, lname, clubName, elo, hotstreak, matchesPlayed, wins, losses, highestElo, clubChamp, achieved);
+
                     players.add(player);
                 }
-                /* Order the list by Elo. */
-                Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());
-                TennisUser user = MainActivity.getUser();
-                int userID = user.getplayerID();
+                Collections.sort(players, (p1, p2) -> p2.getElo() - p1.getElo());   // Sort by Elo rating.
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -202,11 +205,27 @@ public class LadderFragment extends Fragment implements LadderAdapter.OnNoteList
         /**
          * Setup the adapter for the recycler view, only happens on the initial run.
          */
-        protected void setUpRecyclerView(ArrayList<TennisUser> players) {
+        private void setUpRecyclerView(ArrayList<TennisUser> players) {
             ladderAdapter = new LadderAdapter(getContext(), players, onNoteListener);
             recyclerLadder.setAdapter(ladderAdapter);
             recyclerLadder.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerLadder.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        }
+
+        /* Parse the users achievements. */
+        private ArrayList<Integer> parseAchieved(JSONObject object) {
+            try {
+                ArrayList<Integer> achieved = new ArrayList<>();
+                /* Parse the response. */
+                JSONArray achievedArray = object.getJSONArray("achieved");
+                for (int i = 0; i < achievedArray.length(); i++) {
+                    achieved.add(achievedArray.getInt(i));
+                }
+                return achieved;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
         }
 
         /**

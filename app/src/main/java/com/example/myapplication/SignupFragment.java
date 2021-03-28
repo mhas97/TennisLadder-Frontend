@@ -51,7 +51,7 @@ public class SignupFragment extends Fragment {
      * Create a club request to execute asynchronously. This fetches a
      * list of valid clubs from the database ensuring challenge integrity.
      */
-    protected void getClubList() {
+    private void getClubList() {
         clubRequest req = new clubRequest();
         req.execute();
     }
@@ -59,7 +59,7 @@ public class SignupFragment extends Fragment {
     /**
      * Obtain user information to create a signup request.
      */
-    protected void createUser() {
+    private void createUser() {
         String email = txtEmail.getText().toString().trim();
         String password = txtPassword.getText().toString().trim();
         String contactno = txtContactNo.getText().toString().trim();
@@ -94,7 +94,7 @@ public class SignupFragment extends Fragment {
             attachAdapter(clubList);
         }
 
-        protected void parseClubs(String s) {
+        private void parseClubs(String s) {
             try {
                 /* Parse returned club names. */
                 JSONObject object = new JSONObject(s);
@@ -114,7 +114,7 @@ public class SignupFragment extends Fragment {
          * Attach the adapter to the club spinner.
          * @param clubs The list of clubs.
          */
-        protected void attachAdapter(ArrayList<String> clubs) {
+        private void attachAdapter(ArrayList<String> clubs) {
             ArrayAdapter<String> clubAdapter = new ArrayAdapter<>(getContext(), R.layout.support_simple_spinner_dropdown_item, clubs);
             spinnerClub.setAdapter(clubAdapter);
         }

@@ -41,10 +41,10 @@ public class MatchHistoryActivity extends AppCompatActivity {
     }
 
     /**
-     * Indentify the recycler view and attach its adapter. Once the API request
+     * Identify the recycler view and attach its adapter. Once the API request
      * is complete, the adapter is notified and the match history data is displayed.
      */
-    protected void setUpRecyclerView() {
+    private void setUpRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerViewChallenges);
         matchesAdapter = new MatchesAdapter(matches, this);
         recyclerView.setAdapter(matchesAdapter);
@@ -53,9 +53,9 @@ public class MatchHistoryActivity extends AppCompatActivity {
     }
 
     /**
-     * Create an asynchronous object to fetch match history via the API.
+     * Create an asynchronous object to fetch match history.
      */
-    protected void getMatches() {
+    private void getMatches() {
         MatchHistoryRequest req = new MatchHistoryRequest();
         req.execute();
     }
@@ -79,7 +79,7 @@ public class MatchHistoryActivity extends AppCompatActivity {
          * Parse the JSON encoded string and create corresponding TennisChallenge objects.
          * @param s Match history JSON encoded string.
          */
-        protected void parseResponse(String s) {
+        private void parseResponse(String s) {
             try {
                 JSONObject object = new JSONObject(s);
                 JSONArray arr = object.getJSONArray("challenges");
@@ -109,7 +109,7 @@ public class MatchHistoryActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Void... voids) {
             APIRequest req = new APIRequest();
-            int playerID = user.getplayerID();
+            int playerID = user.getPlayerID();
             return req.executeGetRequest(API_URL.URL_GET_MATCH_HISTORY + playerID);
         }
     }

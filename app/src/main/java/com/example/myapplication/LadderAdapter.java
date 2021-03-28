@@ -9,6 +9,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,7 +46,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     public LadderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.ladder_row, parent, false);
-        return new LadderViewHolder(view, onNoteListener);
+        return new LadderViewHolder(view, context, onNoteListener);
     }
 
     /**
@@ -56,7 +57,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     @Override
     public void onBindViewHolder(@NonNull LadderViewHolder holder, int position) {
         /* Identify relevant data. */
-        int playerID = players.get(position).getplayerID();
+        int playerID = players.get(position).getPlayerID();
         String fname = players.get(position).getFname();
         String lname = players.get(position).getLname();
 
@@ -65,22 +66,42 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         holder.txtFname.setText(fname);
         holder.txtLname.setText(lname);
 
-        /* Highlight the the app users view for visibility. */
-        if (playerID == user.getplayerID()) {
+        /* Highlight the the app users view holder for visibility. */
+        if (playerID == user.getPlayerID()) {
             holder.cvPlayer.setBackgroundColor(Color.parseColor("#C2E179"));
         }
         else {
             holder.cvPlayer.setBackgroundColor(Color.parseColor("#FFFFFF"));
         }
 
-        /* Identify players on a hotstreak. */
-        if (players.get(position).getHotstreak() == 1)
-        {
-            holder.imgHotstreak.setImageResource(R.drawable.hot_streak);
+        boolean hasAccolade = false;    // Flag to determine where an accolade icon should sit on the screen.
+
+        /* Identify if a player is a club champion. */
+        if (players.get(position).getClubChamp() == 1) {
+            hasAccolade = true;
+            holder.imgAccolade1.setImageResource(R.drawable.trophy);
+            holder.accoladeClubChamp1 = true;   // Flag to show accolade 1 holds a trophy.
+
         } else {
-            holder.imgHotstreak.setImageResource(0);
+            holder.imgAccolade1.setImageResource(0);
         }
-        holder.txtElo.setText(String.valueOf(players.get(position).getElo()));
+
+        /* Identify if a player is on a hotstreak. */
+        if (players.get(position).getHotstreak() == 1) {
+            if (hasAccolade) {  // If an accolade is obtained, it must lie in position 2.
+                holder.imgAccolade2.setImageResource(R.drawable.hot_streak);
+                holder.accoladeHotstreak2 = true;   // Flag to show accolade 2 holds a hotstreak.
+            }
+            else {  // Else display in position 1.
+                holder.imgAccolade1.setImageResource(R.drawable.hot_streak);
+                holder.accoladeHotstreak1 = true;   // Flag to show accolade 1 holds a hotstreak.
+                holder.imgAccolade2.setImageResource(0);
+            }
+        } else {
+            holder.imgAccolade2.setImageResource(0);
+        }
+
+        holder.txtElo.setText(String.valueOf(players.get(position).getElo()));  // Display the users Elo rating.
     }
 
     @Override
@@ -94,8 +115,8 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     }
 
     /**
-     * The asynchronous filter class performs filtering on a background thread, so won't
-     * freeze the app. Results are automatically published to the UI thread.
+     * The asynchronous filter class performs filtering on a background thread so it
+     * won't freeze the app. Results are automatically published to the UI thread.
      */
     private final Filter ladderFilter = new Filter() {
 
@@ -108,6 +129,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             ArrayList<TennisUser> filtered = new ArrayList<>();
+
             /* Null or empty constraints. */
             if (constraint == null || constraint.length() == 0) {
                 filtered.addAll(completePlayers);
@@ -146,18 +168,45 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
      */
     public static class LadderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private boolean accoladeHotstreak1;
+        private boolean accoladeHotstreak2;
+        private boolean accoladeClubChamp1;
         private final CardView cvPlayer;
         private final TextView txtRank, txtFname, txtLname, txtElo;
-        private final ImageView imgHotstreak;
+        private final ImageView imgAccolade1, imgAccolade2;
         private final OnNoteListener onNoteListener;
-        public LadderViewHolder(@NonNull View itemView, OnNoteListener onNoteListener) {
+        public LadderViewHolder(@NonNull View itemView, Context context, OnNoteListener onNoteListener) {
             super(itemView);
+
+            /* Used to track accolade positioning. */
+            accoladeHotstreak1 = false;
+            accoladeHotstreak2 = false;
+            accoladeClubChamp1 = false;
+
             /* Identify the elements. */
             cvPlayer = itemView.findViewById(R.id.cvPlayer);
             txtRank = itemView.findViewById(R.id.txtRank);
             txtFname = itemView.findViewById(R.id.txtFname);
             txtLname = itemView.findViewById(R.id.txtLname);
-            imgHotstreak = itemView.findViewById(R.id.imgHotstreak);
+            imgAccolade1 = itemView.findViewById(R.id.imgAccolade1);
+            imgAccolade2 = itemView.findViewById(R.id.imgAccolade2);
+
+            /* On-click listener to display a toast description of accolade 1. */
+            imgAccolade1.setOnClickListener(v -> {
+                if (accoladeClubChamp1) {   // The user has a club champion trophy in position 1.
+                    Toast.makeText(context, "User is the highest rated player at their club!", Toast.LENGTH_SHORT).show();
+                }
+                else if (accoladeHotstreak1) {  // The user has a hotstreak in position 1.
+                    Toast.makeText(context, "User has won 3 or more games in a row and is on a hotstreak!", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            /* On-click listener to display a description of accolade 2. */
+            imgAccolade2.setOnClickListener(v -> {
+                if (accoladeHotstreak2) {   // The user has a hotstreak in position 2.
+                    Toast.makeText(context, "User has won 3 or more games in a row and is on a hotstreak!", Toast.LENGTH_SHORT).show();
+                }
+            });
             txtElo = itemView.findViewById(R.id.txtElo);
             this.onNoteListener = onNoteListener;
             itemView.setOnClickListener(this);

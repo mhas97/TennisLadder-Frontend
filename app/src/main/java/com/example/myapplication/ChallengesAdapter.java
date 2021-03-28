@@ -10,8 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 /**
- * Handles the recycler view holder by populating
- * it with a card view for each challenge.
+ * Handles the recycler view holder by populating it with a card view for each challenge.
  */
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder> {
 
@@ -43,18 +42,19 @@ public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.Ch
     public void onBindViewHolder(@NonNull ChallengeViewHolder holder, int position) {
         /* Accepted challenge. */
         if (challenges.get(position).getAccepted() == 1) {
-            holder.txtStatus.setText("It's On!");
+            holder.txtStatus.setText(R.string.accepted_challenge);
         }
-        /* Initiated challenge. */
+        /* Outgoing challenge. */
         else if (challenges.get(position).getDidInitiate() == 0) {
-            holder.txtStatus.setText("Incoming Challenge");
+            holder.txtStatus.setText(R.string.incoming_challenge);
         }
-        /* Received challenge. */
+        /* Incoming challenge. */
         else {
-            holder.txtStatus.setText("Outgoing Challenge");
+            holder.txtStatus.setText(R.string.outgoing_challenge);
         }
         /* Display opponent data. */
-        String opponentName = challenges.get(position).getOpponent().getFname() + " " + challenges.get(position).getOpponent().getLname();
+        TennisUser opponent = challenges.get(position).getOpponent();
+        String opponentName = opponent.getFname() + " " + opponent.getLname();
         holder.txtOpponent.setText(opponentName);
     }
 

@@ -20,7 +20,7 @@ import java.util.Collections;
 /**
  * Fragment to display challenge information for a user. An adapter interface is used
  * to handle recycler view population, as well as an on-note listener to handle individual
- * challenges interaction. A recycler view is a dynamic list which is ideal for displaying
+ * challenge interaction. A recycler view is a dynamic list which is ideal for displaying
  * large sets of data. As such this is the primary view holder used throughout this project.
  * (https://developer.android.com/guide/topics/ui/layout/recyclerview)
  */
@@ -28,7 +28,6 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
 
     private ArrayList<TennisChallenge> challenges;
     private ChallengesAdapter challengesAdapter;
-    RecyclerView recyclerChallenges;
     private final ChallengesAdapter.OnNoteListener onNoteListener = this;
     private TextView txtWelcome;
     private TextView txtMessage;
@@ -43,6 +42,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
         txtWelcome = view.findViewById(R.id.txtWelcome);
         txtMessage = view.findViewById(R.id.txtMessage);
 
+        /* Set up the recycler view and fetch challenge data. */
         challenges = new ArrayList<>();
         setUpRecyclerView(view);
         getChallenges();
@@ -62,8 +62,8 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
      * Identify the recycler view element. An adapter is then created holding a reference
      * to the challenges list. The list is populated upon completion of the network request.
      */
-    protected void setUpRecyclerView(View view) {
-        recyclerChallenges = view.findViewById(R.id.recyclerViewChallenges);
+    private void setUpRecyclerView(View view) {
+        RecyclerView recyclerChallenges = view.findViewById(R.id.recyclerViewChallenges);
         challengesAdapter = new ChallengesAdapter(getContext(), challenges, onNoteListener);
         recyclerChallenges.setAdapter(challengesAdapter);
         recyclerChallenges.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -73,7 +73,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
     /**
      * Create an object to perform an asynchronous network request to fetch user challenges.
      */
-    protected void getChallenges() {
+    private void getChallenges() {
         ChallengesRequest req = new ChallengesRequest();
         req.execute();
     }
@@ -110,56 +110,82 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
         }
 
         /**
-         * Parses challenge data and creates an array list of challenges. When this process
+         * Parse challenge data and create an array list of challenges. When this process
          * is finished, the adapter is notified that the data set has been modified.
          * @param s challenge data JSON string.
          */
-        protected void parseResponse(String s) {
+        private void parseResponse(String s) {
             try {
                 /* Clear the dataset to ensure up to date information is displayed between fragment switches */
                 challenges.clear();
                 JSONObject object = new JSONObject(s);
-                JSONArray arr = object.getJSONArray("challenges");
-                for (int i = 0; i < arr.length(); ++i) {
+                JSONArray playersArray = object.getJSONArray("challenges");
+                for (int i = 0; i < playersArray.length(); ++i) {
+
                     /* Parse response. */
-                    JSONObject obj = arr.getJSONObject(i);
-                    int challengeID = obj.getInt("challengeid");
-                    int oppID = obj.getInt("opponentid");
-                    String oppFname = obj.getString("fname");
-                    String oppLname = obj.getString("lname");
-                    int oppElo = obj.getInt("elo");
-                    int oppWinstreak = obj.getInt("winstreak");
-                    int oppHotstreak = obj.getInt("hotstreak");
-                    int oppMatchesPlayed = obj.getInt("matchesplayed");
-                    int oppWins = obj.getInt("wins");
-                    int oppLosses = obj.getInt("losses");
-                    int oppHighestElo = obj.getInt("highestelo");
-                    int oppClubChamp = obj.getInt("clubchamp");
-                    String date = obj.getString("date");
-                    String time = obj.getString("time");
-                    String location = obj.getString("location");
-                    int didInitiate = obj.getInt("didinitiate");
-                    int accepted = obj.getInt("accepted");
+                    JSONObject playerObject = playersArray.getJSONObject(i);
+                    int challengeID = playerObject.getInt("challengeid");
+                    int oppID = playerObject.getInt("opponentid");
+                    String oppFname = playerObject.getString("fname");
+                    String oppLname = playerObject.getString("lname");
+                    int oppElo = playerObject.getInt("elo");
+                    int oppWinstreak = playerObject.getInt("winstreak");
+                    int oppHotstreak = playerObject.getInt("hotstreak");
+                    int oppMatchesPlayed = playerObject.getInt("matchesplayed");
+                    int oppWins = playerObject.getInt("wins");
+                    int oppLosses = playerObject.getInt("losses");
+                    int oppHighestElo = playerObject.getInt("highestelo");
+                    int oppClubChamp = playerObject.getInt("clubchamp");
+                    String date = playerObject.getString("date");
+                    String time = playerObject.getString("time");
+                    String location = playerObject.getString("location");
+                    int didInitiate = playerObject.getInt("didinitiate");
+                    int accepted = playerObject.getInt("accepted");
+
+                    /* Fetch the users achievement data. */
+                    ArrayList<Integer> achieved = parseAchieved(playerObject);
 
                     /* Create the resulting challenge object. */
                     TennisChallenge challenge = new TennisChallenge(challengeID,
                             new TennisUser(oppID, oppFname, oppLname, oppElo, oppWinstreak,
                                     oppHotstreak, oppMatchesPlayed, oppWins, oppLosses, oppHighestElo,
-                                    oppClubChamp), date, time, location, didInitiate, accepted);
+                                    oppClubChamp, achieved), date, time, location, didInitiate, accepted);
                     challenges.add(challenge);
                 }
-                /* Reverse the order so the latest challenge displays first. */
-                Collections.reverse(challenges);
-                if (challenges.size() == 0) {
-                    txtWelcome.setVisibility(View.VISIBLE);
-                    txtMessage.setVisibility(View.VISIBLE);
-                }
-                else {
-                    txtWelcome.setVisibility(View.INVISIBLE);
-                    txtMessage.setVisibility(View.INVISIBLE);
-                }
+                Collections.reverse(challenges);    // Reverse the order so the latest challenge displays first.
+                displayWelcomeMessage();
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+        }
+
+        /* Parse the users achievements. */
+        private ArrayList<Integer> parseAchieved(JSONObject object) {
+            try {
+                ArrayList<Integer> achieved = new ArrayList<>();
+                /* Parse the achievements array. */
+                JSONArray achievedArray = object.getJSONArray("achieved");
+                for (int i = 0; i < achievedArray.length(); i++) {
+                    achieved.add(achievedArray.getInt(i));
+                }
+                return achieved;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        /**
+         * Display the welcome message if there are no challenges.
+         */
+        private void displayWelcomeMessage() {
+            if (challenges.size() == 0) {
+                txtWelcome.setVisibility(View.VISIBLE);
+                txtMessage.setVisibility(View.VISIBLE);
+            }
+            else {
+                txtWelcome.setVisibility(View.INVISIBLE);
+                txtMessage.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -169,7 +195,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
         @Override
         protected String doInBackground(Void... voids) {
             APIRequest req = new APIRequest();
-            int playerID = MainActivity.getUser().getplayerID();
+            int playerID = MainActivity.getUser().getPlayerID();
             return req.executeGetRequest(API_URL.URL_GET_CHALLENGES + playerID);
         }
     }
