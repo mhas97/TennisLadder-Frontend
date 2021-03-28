@@ -7,18 +7,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import androidx.annotation.RequiresApi;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Helper class for achievement checking. Takes participant and match related data to determine
- * if an achievement requirement has been met. If so, a notification is made to notify the user
- * and a network request is made to update the database.
+ * if an achievement requirement has been met. If so, a notification is displayed to the user
+ * and an API request executed to update the database.
  */
 public class AchievementHandler {
 
@@ -32,6 +26,8 @@ public class AchievementHandler {
 
     public AchievementHandler(TennisUser user, TennisUser opponent, String score, int adjustedElo, boolean userWon, Context context) {
         this.user = user;
+
+        /* Determine the winning player */
         if (userWon) {
             this.winner = user;
             this.loser = opponent;
@@ -48,8 +44,8 @@ public class AchievementHandler {
 
     /**
      * If an achievement requirement has been met, first check that the winning player does
-     * not already own the achievement. If not, if the user is the acquirer send a system
-     * notification. Finally create a network request to update the database.
+     * not already own the achievement. If the user is the acquirer send a system notification.
+     * Finally create a network request to update the database.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected void checkForUnlocks() {
@@ -69,7 +65,7 @@ public class AchievementHandler {
         }
     }
 
-    /* Check for 10 matches played (accounting for this match). */
+    /* 10 matches played (accounting for this match). */
     private void checkGrinding() {
         if (winner.getMatchesPlayed() == 9) {
             winner.getAchievements().add(1);
@@ -81,7 +77,7 @@ public class AchievementHandler {
         }
     }
 
-    /* Check for a first loss. */
+    /* First loss. */
     private void checkNiceTry() {
         if (loser.getLosses() == 0) {
             loser.getAchievements().add(2);
@@ -99,7 +95,7 @@ public class AchievementHandler {
 
     /* Check if the winner has surpassed 1750 Elo. */
     private void checkUnstoppable() {
-        if (adjustedElo > 1750 && !winner.getAchievements().contains(4)) {
+        if (adjustedElo >= 1750 && !winner.getAchievements().contains(4)) {
             winner.getAchievements().add(4);
             unlockRequest(winner.getPlayerID(), 4);
         }
@@ -123,7 +119,7 @@ public class AchievementHandler {
         }
     }
 
-    /* Create a request using the corresponding player and achievement ID */
+    /* Create an asynchronous API request using the corresponding player and achievement ID */
     private void unlockRequest(int playerID, int achievementID) {
         PostAchievements req = new PostAchievements(playerID, achievementID);
         req.execute();
@@ -132,20 +128,22 @@ public class AchievementHandler {
     /* Create a notification if the app user has unlocked something. */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void createNotification() {
-        /* Create notification manager and assign a channel. */
+        /* Create a notification manager and channel. */
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         String channelID = "channel_achievement";
         String channelName = "Achievement Channel";
         int notifyID = 1;
         NotificationChannel notificationChannel = new NotificationChannel(channelID, channelName, NotificationManager.IMPORTANCE_HIGH);
         notificationManager.createNotificationChannel(notificationChannel);
+
+        /* Create the notification. */
         Notification notification = new Notification.Builder(context)
                 .setContentTitle("Achievement Unlocked!")
                 .setContentText("Check out your new trophy on your profile")
                 .setSmallIcon(R.drawable.trophy)
                 .setChannelId(channelID)
                 .build();
-        notificationManager.notify(notifyID, notification); // Display the notification.
+        notificationManager.notify(notifyID, notification);
     }
 
     /**

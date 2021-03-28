@@ -9,6 +9,8 @@ import java.util.ArrayList;
  * to be passed between pages. This is better practice than having static
  * global user variables and is useful for displaying user info and creating
  * challenges.
+ *
+ * https://developer.android.com/reference/android/os/Parcelable
  */
 public class TennisUser implements Parcelable {
 
@@ -88,12 +90,6 @@ public class TennisUser implements Parcelable {
 
     public int getPlayerID() { return playerID; }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public String getContactNo() { return contactNo; }
-
     public String getFname() { return fname; }
 
     public String getLname() { return lname; }
@@ -107,8 +103,6 @@ public class TennisUser implements Parcelable {
     public int getHotstreak() { return hotstreak; }
 
     public int getMatchesPlayed() { return matchesPlayed; }
-
-    public int getWins() { return wins; }
 
     public int getLosses() { return losses; }
 

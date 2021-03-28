@@ -11,6 +11,10 @@ import java.util.ArrayList;
 
 /**
  * Handles the recycler view holder by populating it with a card view for each challenge.
+ *
+ * The following tutorials on recycler view adapters and on-note actions was used during implementation:
+ * https://www.youtube.com/watch?v=18VcnYN5_LM
+ * https://www.youtube.com/watch?v=69C1ljfDvl0&t=507s
  */
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder> {
 

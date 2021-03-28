@@ -12,6 +12,9 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Behaves as a fragment manager for both the login and signup activities. An
  * adapter instance is created to handle fragment switching and interaction.
+ *
+ * The following tutorial on fragment handling was used during implementation:
+ * https://www.youtube.com/watch?v=ayKMfVt2Sg4
  */
 public class LoginActivity extends AppCompatActivity {
 

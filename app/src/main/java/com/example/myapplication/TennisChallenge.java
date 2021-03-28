@@ -5,7 +5,9 @@ import android.os.Parcelable;
 
 /**
  * Similarly to TennisUser, this class implements the Parcelable interface
- * allowing challenge objects to be passed between pages.
+ * allowing custom objects to be passed between pages.
+ *
+ * https://developer.android.com/reference/android/os/Parcelable
  */
 public class TennisChallenge implements Parcelable {
     private final int challengeID;

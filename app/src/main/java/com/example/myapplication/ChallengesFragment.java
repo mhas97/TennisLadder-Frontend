@@ -20,9 +20,14 @@ import java.util.Collections;
 /**
  * Fragment to display challenge information for a user. An adapter interface is used
  * to handle recycler view population, as well as an on-note listener to handle individual
- * challenge interaction. A recycler view is a dynamic list which is ideal for displaying
+ * challenge interaction.
+ *
+ * A recycler view is a dynamic list which is ideal for displaying
  * large sets of data. As such this is the primary view holder used throughout this project.
  * (https://developer.android.com/guide/topics/ui/layout/recyclerview)
+ *
+ * The following tutorial on recycler views was also used during implementation:
+ * https://www.youtube.com/watch?v=18VcnYN5_LM
  */
 public class ChallengesFragment extends Fragment implements ChallengesAdapter.OnNoteListener {
 
@@ -116,7 +121,7 @@ public class ChallengesFragment extends Fragment implements ChallengesAdapter.On
          */
         private void parseResponse(String s) {
             try {
-                /* Clear the dataset to ensure up to date information is displayed between fragment switches */
+                /* Clear the dataset to ensure up to date information is displayed between fragment switches. */
                 challenges.clear();
                 JSONObject object = new JSONObject(s);
                 JSONArray playersArray = object.getJSONArray("challenges");

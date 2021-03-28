@@ -31,7 +31,7 @@ public class TrophyCabinetHelper {
      * Loop through the users achievement array and populate the trophy holders with any
      * unlocks. To ensure no duplicates, double check against an array of seen achievements.
      * User achievements are an array of ID's, these are fed to the global achievements hashmap
-     * generated during login to fetch data related to the achievement.
+     * generated during login to fetch the corresponding achievement data.
      */
     public void ArrangeTrophyCabinet() {
         /* Obtain the list of user achievements and create the seen array. */

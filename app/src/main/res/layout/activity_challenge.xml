@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txtVsChallenger"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-smallcaps"
@@ -40,17 +40,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <CalendarView
-        android:id="@+id/calendarChallengeDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnTimePicker"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerChallengeClub" />
+        app:layout_constraintTop_toBottomOf="@+id/txtVsChallenger" />
 
     <Spinner
         android:id="@+id/spinnerChallengeClub"
@@ -65,17 +55,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtChallengeOpponent" />
 
-    <Button
-        android:id="@+id/btnSubmitChallenge"
+    <CalendarView
+        android:id="@+id/calendarChallengeDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:text="CREATE CHALLENGE"
-        android:background="@drawable/rounded_edge"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnTimePicker"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerChallengeClub" />
 
     <Button
         android:id="@+id/btnTimePicker"
@@ -86,6 +74,18 @@
         android:background="@drawable/rounded_edge"
         android:text="Select time"
         app:layout_constraintBottom_toTopOf="@+id/btnSubmitChallenge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnSubmitChallenge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="CREATE CHALLENGE"
+        android:background="@drawable/rounded_edge"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

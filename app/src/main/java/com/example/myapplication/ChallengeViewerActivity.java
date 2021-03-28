@@ -231,7 +231,7 @@ public class ChallengeViewerActivity extends AppCompatActivity {
                 String message = object.getString("message");
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 if (object.getString("error").equals("false")) {
-                    /* Navigate back to the challenges fragment. */
+                    /* Navigate to the challenges fragment. */
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtras(challengeExtras);
                     startActivity(intent);
@@ -274,11 +274,11 @@ public class ChallengeViewerActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(s);
                 String message = "Challenge ";
-                /* Determine if it was a decline or cancellation. */
+                /* Determine if it was a decline or cancellation, output status */
                 message += cancelReq ? "cancelled" : "declined";
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
                 if (object.getString("error").equals("false")) {
-                    /* Navigate back to the challenges fragment. */
+                    /* Navigate to the challenges fragment. */
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtras(challengeExtras);
                     startActivity(intent);

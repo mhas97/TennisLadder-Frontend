@@ -20,8 +20,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 /**
- * Handles challenge creation, including formatting user input
- * and making network requests to communicate with the API.
+ * Handles challenge creation, including formatting user input and executing challenge related
+ * network requests.
  */
 public class ChallengeActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
 
@@ -92,8 +92,8 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
     }
 
     /**
-     * Use both users clubs to create an array list. Once complete,
-     * create an array adapter to attach to the spinner.
+     * Use both users clubs to create an array list. Subsequently
+     * create an array adapter to attach to the spinner object.
      */
     private void setUpClubAdapter() {
         ArrayList<String> clubs = new ArrayList<>();
@@ -173,15 +173,13 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
         protected String doInBackground(Void... voids) {
             APIRequest challengeReq = new APIRequest();
             String IDCatch = challengeReq.executePostRequest(API_URL.URL_CREATE_CHALLENGE, params); // Catch the challenge ID.
-            String status = createPlayerChallenge(IDCatch);     // Create player_challenge entries using this ID.
-            return status;
+            return createPlayerChallenge(IDCatch);     // Create player_challenge entries using the ID.
         }
 
         /**
          * Use the challenge ID to create player_challenge entries.
          */
         private String createPlayerChallenge(String IDCatch) {
-            APIRequest playerChallengeRequest = new APIRequest();
             try {
                 JSONObject object = new JSONObject(IDCatch);
                 String challengeID = object.getString("challengeid");
@@ -193,6 +191,7 @@ public class ChallengeActivity extends AppCompatActivity implements TimePickerDi
                 playerChallengeParams.put("opponentid", String.valueOf(opponent.getPlayerID()));
 
                 /* Execute the network request, return the status. */
+                APIRequest playerChallengeRequest = new APIRequest();
                 return playerChallengeRequest.executePostRequest(API_URL.URL_CREATE_PLAYER_CHALLENGE, playerChallengeParams);
             } catch (JSONException e) {
                 e.printStackTrace();

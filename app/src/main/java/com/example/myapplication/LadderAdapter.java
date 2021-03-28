@@ -18,6 +18,10 @@ import java.util.ArrayList;
 /**
  * Adapter to handle the ladder recycler view. This includes updating its contents
  * to account for both network requests and user queries via the search bar.
+ *
+ * The following tutorials on recycler view adapters and on-note actions was used during implementation:
+ * https://www.youtube.com/watch?v=18VcnYN5_LM
+ * https://www.youtube.com/watch?v=69C1ljfDvl0&t=507s
  */
 public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderViewHolder> implements Filterable {
 
@@ -56,7 +60,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
      */
     @Override
     public void onBindViewHolder(@NonNull LadderViewHolder holder, int position) {
-        /* Identify relevant data. */
+        /* Identify player data. */
         int playerID = players.get(position).getPlayerID();
         String fname = players.get(position).getFname();
         String lname = players.get(position).getLname();
@@ -119,7 +123,6 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
      * won't freeze the app. Results are automatically published to the UI thread.
      */
     private final Filter ladderFilter = new Filter() {
-
         /**
          * Pass a filter over the complete list to search for players in the ladder. If the
          * constraint is invalid or empty, add all users. Else filter each player in the
@@ -164,7 +167,7 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
     };
 
     /**
-     * Each player is contained within a view holder, containing data as well as an on-note listener.
+     * Provides a view holder for each player, containing its data and an on-note listener.
      */
     public static class LadderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -178,12 +181,12 @@ public class LadderAdapter extends RecyclerView.Adapter<LadderAdapter.LadderView
         public LadderViewHolder(@NonNull View itemView, Context context, OnNoteListener onNoteListener) {
             super(itemView);
 
-            /* Used to track accolade positioning. */
+            /* Track accolade positioning. */
             accoladeHotstreak1 = false;
             accoladeHotstreak2 = false;
             accoladeClubChamp1 = false;
 
-            /* Identify the elements. */
+            /* Identify row elements. */
             cvPlayer = itemView.findViewById(R.id.cvPlayer);
             txtRank = itemView.findViewById(R.id.txtRank);
             txtFname = itemView.findViewById(R.id.txtFname);

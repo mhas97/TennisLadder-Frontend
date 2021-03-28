@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class is used to make API requests via the HTTPURLConnection class.
- * Some of the structure and methods found in this class are found in the following tutorials:
+ * Helper class to make API requests via the HTTPURLConnection class.
+ * The structure and methods found in this class are discussed in the following tutorials:
  * [REF: https://www.simplifiedcoding.net/android-mysql-tutorial-to-perform-basic-crud-operation/#Android-MySQL-Tutorial]
- *  * https://developer.android.com/reference/java/net/HttpURLConnection
+ * https://developer.android.com/reference/java/net/HttpURLConnection
  *
  * HTTPURLConnection as described in the Android documentation should follow a basic pattern:
  * - Open the connection

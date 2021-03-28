@@ -11,6 +11,13 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Behaves as a fragment manager for the challenges, ladder and profile fragments. An
+ * adapter instance is created to handle fragment switching and interaction.
+ *
+ * The following tutorial on fragment handling was used during implementation:
+ * https://www.youtube.com/watch?v=ayKMfVt2Sg4
+ */
 public class MainActivity extends AppCompatActivity {
 
     private static TennisUser user;
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Fragments use of this function to acquire app user data.
+     * Fragments use this function to acquire app user data.
      * @return TennisUser object.
      */
     public static TennisUser getUser() {

@@ -27,7 +27,6 @@ public class ProfileFragment extends Fragment {
         TextView txtPlayerName = view.findViewById(R.id.txtUserName);
         TextView txtPlayerClub = view.findViewById(R.id.txtUserClub);
         Button btnMatchHistory = view.findViewById(R.id.btnPlayerMatchHistory);
-
         imgTrophy1 = view.findViewById(R.id.imgTrophy1);
         imgTrophy2 = view.findViewById(R.id.imgTrophy2);
         imgTrophy3 = view.findViewById(R.id.imgTrophy3);

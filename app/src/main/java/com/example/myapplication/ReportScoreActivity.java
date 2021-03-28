@@ -157,7 +157,7 @@ public class ReportScoreActivity extends AppCompatActivity {
     }
 
     /**
-     * Format the user entered score so it can be stored in the database
+     * Format the user entered score so it can be stored in the database.
      * @return Formatted score.
      */
     private String buildScore() {

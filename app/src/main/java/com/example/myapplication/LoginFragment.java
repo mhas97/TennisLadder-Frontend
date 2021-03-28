@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Allows a user to enter credentials and attempt to login. Upon success, the user will
- * be navigated to the challenges page along with a bundled object holding necessary user data.
+ * Allows a user to enter credentials and attempt to login. Upon success, necessary user app
+ * data will be returned from the API and bundled for activity switching.
  */
 public class LoginFragment extends Fragment {
 
@@ -76,7 +76,6 @@ public class LoginFragment extends Fragment {
             if (user != null) {
                 login(user);
             }
-
         }
 
         /**
@@ -127,7 +126,7 @@ public class LoginFragment extends Fragment {
         }
 
         /**
-         * Instantiate the singleton instance and use its method to hold a list of global achievements.
+         * Instantiate the Singleton instance and use its single method to hold the list of global achievements.
          */
         private void fetchGlobalAchievements(JSONObject object) {
             GlobalAchievements globalAchievements = GlobalAchievements.getInstance();

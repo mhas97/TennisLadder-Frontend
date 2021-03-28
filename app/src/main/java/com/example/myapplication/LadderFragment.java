@@ -27,9 +27,13 @@ import java.util.Objects;
 /**
  * Fragment to display ladder information. An adapter interface is used to handle recycler
  * view population, as well as an on-note listener to handle individual player interaction.
+ *
  * A recycler view is a dynamic list which is ideal for displaying large sets of data. As
  * such this is the primary view holder used throughout this project.
  * (https://developer.android.com/guide/topics/ui/layout/recyclerview)
+ *
+ * The following tutorial on recycler views was also used during implementation:
+ * https://www.youtube.com/watch?v=18VcnYN5_LM
  */
 public class LadderFragment extends Fragment implements LadderAdapter.OnNoteListener {
 

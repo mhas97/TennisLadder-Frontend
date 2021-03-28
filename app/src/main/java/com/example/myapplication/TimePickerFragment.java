@@ -10,6 +10,9 @@ import java.util.Calendar;
 
 /**
  * Allows the user to select a time when creating a challenge.
+ *
+ * Implementation of the time picker is discussed in this tutorial.
+ * https://www.youtube.com/watch?v=QMwaNN_aM3U
  */
 public class TimePickerFragment extends DialogFragment {
 

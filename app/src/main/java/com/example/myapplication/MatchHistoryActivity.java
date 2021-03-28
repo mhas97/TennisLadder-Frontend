@@ -17,6 +17,9 @@ import java.util.Collections;
  * Allows viewing of user match history. Bundled data is passed in either one of two ways:
  * - the users app data for viewing personal match history
  * - accessing match history on another users profile
+ *
+ * The following tutorial on recycler views was used during implementation:
+ * https://www.youtube.com/watch?v=18VcnYN5_LM
  */
 public class MatchHistoryActivity extends AppCompatActivity {
 

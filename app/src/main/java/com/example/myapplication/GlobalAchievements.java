@@ -3,10 +3,9 @@ package com.example.myapplication;
 import java.util.HashMap;
 
 /**
- * A singleton class used to hold a the global list of achievements. This list is generated
- * on login by first making a network request to fetch a full list of achievement data. This
- * is used to generate a hashmap which maps achievementID:[name, description], which is used
- * for displaying achievements on user profiles.
+ * This Singleton patterned class used to hold a the global list of achievements. The achievement list
+ * data is feteched on login via a network request. This data is used to generate a hashmap mapping
+ * achievementID:[name, description], which is used for displaying achievements on user profiles.
  */
 public class GlobalAchievements {
 

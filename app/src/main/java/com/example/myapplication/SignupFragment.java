@@ -28,7 +28,7 @@ public class SignupFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = (ViewGroup) layoutInflater.inflate(R.layout.fragment_signup, container, false);
+        View view = layoutInflater.inflate(R.layout.fragment_signup, container, false);
 
         /* Identify page elements. */
         txtEmail = view.findViewById(R.id.txtEmailSignup);
@@ -130,7 +130,7 @@ public class SignupFragment extends Fragment {
     }
 
     /**
-     * An asynchronous task that processes a signup request.
+     * An asynchronous task to processes a signup request.
      */
     private class SignupRequest extends AsyncTask<Void, Void, String> {
 

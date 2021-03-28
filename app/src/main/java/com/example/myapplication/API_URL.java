@@ -1,7 +1,7 @@
 package com.example.myapplication;
 
 /**
- * This class holds the URL addresses for API communication.
+ * Holds the URL addresses for API communication.
  */
 public class API_URL {
 
@@ -11,7 +11,6 @@ public class API_URL {
     /* User signup and login URL's. */
     public static final String URL_CREATE_PLAYER = BASE_URL + "create_player";
     public static final String URL_LOGIN = BASE_URL + "login";
-    public static final String URL_GET_CLUBS = BASE_URL + "get_clubs";
 
     /* Challenge related URL's. */
     public static final String URL_GET_CHALLENGES = BASE_URL + "get_challenges&playerid=";
@@ -25,4 +24,5 @@ public class API_URL {
 
     /* Misc */
     public static final String URL_POST_ACHIEVEMENTS = BASE_URL + "post_achievements";
+    public static final String URL_GET_CLUBS = BASE_URL + "get_clubs";
 }
