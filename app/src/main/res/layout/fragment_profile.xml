@@ -65,6 +65,16 @@
         app:layout_constraintTop_toBottomOf="@+id/txtUserClub" />
 
     <ImageView
+        android:id="@+id/imgTrophy5"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/imgTrophy6"
+        app:layout_constraintStart_toEndOf="@+id/imgTrophy4"
+        app:layout_constraintTop_toBottomOf="@+id/imgTrophy2" />
+
+    <ImageView
         android:id="@+id/imgTrophy1"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -74,6 +84,28 @@
         android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtTrophyCabinet" />
+
+    <ImageView
+        android:id="@+id/imgTrophy6"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginRight="68dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgTrophy3" />
+
+    <ImageView
+        android:id="@+id/imgTrophy4"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginLeft="68dp"
+        android:layout_marginTop="32dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgTrophy1" />
 
     <ImageView
         android:id="@+id/imgTrophy2"
@@ -97,46 +129,14 @@
         app:layout_constraintTop_toBottomOf="@+id/txtTrophyCabinet" />
 
     <ImageView
-        android:id="@+id/imgTrophy4"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginLeft="68dp"
-        android:layout_marginTop="32dp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgTrophy1" />
-
-    <ImageView
-        android:id="@+id/imgTrophy5"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/imgTrophy6"
-        app:layout_constraintStart_toEndOf="@+id/imgTrophy4"
-        app:layout_constraintTop_toBottomOf="@+id/imgTrophy2" />
-
-    <ImageView
-        android:id="@+id/imgTrophy6"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="68dp"
-        android:layout_marginRight="68dp"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgTrophy3" />
-
-    <ImageView
         android:id="@+id/trophyRectangle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

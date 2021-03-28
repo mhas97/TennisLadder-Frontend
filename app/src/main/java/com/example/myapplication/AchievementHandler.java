@@ -166,7 +166,7 @@ public class AchievementHandler {
         @Override
         protected String doInBackground(Void... voids) {
             APIRequest req = new APIRequest();
-            return req.executePostRequest(API_URL.URL_POST_ACHIEVEMENTS, params);
+            return req.executePostRequest(API_URL.URL_POST_ACHIEVEMENT, params);
         }
     }
 }
