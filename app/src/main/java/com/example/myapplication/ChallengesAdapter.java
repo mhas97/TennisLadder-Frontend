@@ -14,7 +14,7 @@ import java.util.ArrayList;
  *
  * The following tutorials on recycler view adapters and on-note actions was used during implementation:
  * https://www.youtube.com/watch?v=18VcnYN5_LM
- * https://www.youtube.com/watch?v=69C1ljfDvl0&t=507s
+ * https://www.youtube.com/watch?v=69C1ljfDvl0
  */
 public class ChallengesAdapter extends RecyclerView.Adapter<ChallengesAdapter.ChallengeViewHolder> {
 
